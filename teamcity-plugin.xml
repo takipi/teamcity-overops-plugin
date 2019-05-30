@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:schemas-jetbrains-com:teamcity-plugin-v1-xml">
+  <info>
+    <name>overops-plugin</name>
+    <display-name>OverOps</display-name>
+    <version>@Version@</version>
+    <description>This plugin will check a build for errors in OverOps.</description>
+    <download-url>https://github.com/takipi/teamcity-overops-plugin</download-url>
+    <email>chen.harel@overops.com</email>
+    <vendor>
+      <name>OverOps</name>
+      <url>https://www.overops.com/</url>
+      <logo>https://www.overops.com/assets/images/navigation/logo_regular.svg</logo>
+    </vendor>
+  </info>
+  <deployment use-separate-classloader="true"/>
+</teamcity-plugin>

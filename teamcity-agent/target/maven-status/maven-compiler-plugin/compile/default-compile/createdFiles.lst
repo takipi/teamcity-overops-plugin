@@ -1,0 +1,16 @@
+com/overops/plugins/runner/OverOpsProcess.class
+com/overops/plugins/service/impl/ReportBuilder.class
+com/overops/plugins/runner/OverOpsBuildProcess.class
+com/overops/plugins/model/QueryOverOps.class
+com/overops/plugins/service/impl/OverOpsServiceImpl.class
+com/overops/plugins/OverOpsReportPlugin.class
+com/overops/plugins/service/impl/ReportBuilder$UniqueEventKey.class
+com/overops/plugins/runner/OverOpsAgentBuildRunner.class
+com/overops/plugins/service/OverOpsService.class
+com/overops/plugins/service/impl/OverOpsServiceImpl$ApiClientObserver.class
+com/overops/plugins/service/impl/ReportBuilder$ReportVolume.class
+com/overops/plugins/service/impl/ReportBuilder$QualityReport.class
+com/overops/plugins/runner/OverOpsAgentBuildRunner$1.class
+com/overops/plugins/model/OOReportRegressedEvent.class
+com/overops/plugins/model/Setting.class
+com/overops/plugins/service/impl/ReportBuilder$1.class

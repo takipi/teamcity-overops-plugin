@@ -1,0 +1,10 @@
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/runner/OverOpsBuildProcess.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/runner/OverOpsAgentBuildRunner.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/model/QueryOverOps.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/model/OOReportRegressedEvent.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/model/Setting.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/service/impl/ReportBuilder.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/runner/OverOpsProcess.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/service/impl/OverOpsServiceImpl.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/OverOpsReportPlugin.java
+/Users/volodymyrrachuk/Work/freelance/teamcity-overops-plugin/teamcity-agent/src/main/java/com/overops/plugins/service/OverOpsService.java

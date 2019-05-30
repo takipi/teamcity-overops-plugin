@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.overops.plugins</groupId>
+  <artifactId>teamcity</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>OverOps plugin</name>
+  <description>This plugin will check a build for errors in OverOps.</description>
+  <url>GitHubLink</url>
+
+  <organization>
+    <name>OverOps</name>
+    <url>https://www.overops.com/</url>
+  </organization>
+
+  <properties>
+      <teamcity-version>2018.2</teamcity-version>
+  </properties>
+  <repositories>
+    <repository>
+        <id>JetBrains</id>
+        <url>https://download.jetbrains.com/teamcity-repository</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+      <pluginRepository>
+          <id>JetBrains</id>
+          <url>https://download.jetbrains.com/teamcity-repository</url>
+      </pluginRepository>
+  </pluginRepositories>
+<dependencies>
+  <dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.9.8</version>
+  </dependency>
+</dependencies>
+
+  <build>
+      <pluginManagement>
+          <plugins>
+              <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <configuration>
+                      <source>1.8</source>
+                      <target>1.8</target>
+                  </configuration>
+              </plugin>
+              <plugin>
+                  <groupId>org.jetbrains.teamcity</groupId>
+                  <artifactId>teamcity-sdk-maven-plugin</artifactId>
+                  <version>0.4</version>
+                  <configuration>
+                      <!-- <teamcityDir>/path/to/tc/distro</teamcityDir> -->
+                  </configuration>
+              </plugin>
+          </plugins>
+      </pluginManagement>
+  </build>
+  <modules>
+    <module>teamcity-server</module>
+    <module>teamcity-agent</module>
+    <module>teamcity-common</module>
+    <module>build</module>
+  </modules>
+</project>

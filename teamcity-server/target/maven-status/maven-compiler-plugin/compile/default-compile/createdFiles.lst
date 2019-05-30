@@ -1,0 +1,10 @@
+com/overops/plugins/runner/manager/service/SettingService.class
+com/overops/plugins/runner/manager/controller/SettingActionController.class
+com/overops/plugins/runner/runner/OverOpsRunType.class
+com/overops/plugins/runner/manager/controller/EditSettingControllerExtension.class
+com/overops/plugins/runner/runner/OverOpsRunType$1.class
+com/overops/plugins/runner/manager/extension/BuildSummaryExtension.class
+com/overops/plugins/runner/manager/extension/GeneralSettingTab.class
+com/overops/plugins/runner/manager/service/impl/SettingServiceImpl.class
+com/overops/plugins/runner/manager/model/TestServiceResponse.class
+com/overops/plugins/runner/manager/model/GeneralSetting.class
