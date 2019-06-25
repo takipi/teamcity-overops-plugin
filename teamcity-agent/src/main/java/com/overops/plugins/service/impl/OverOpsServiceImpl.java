@@ -8,6 +8,7 @@ import com.takipi.api.client.data.view.SummarizedView;
 import com.takipi.api.client.observe.Observer;
 import com.takipi.api.client.util.regression.RegressionInput;
 import com.takipi.api.client.util.view.ViewUtil;
+import jetbrains.buildServer.agent.BuildProgressLogger;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -23,15 +24,13 @@ public class OverOpsServiceImpl implements OverOpsService {
     private boolean runRegressions = false;
 
     @Override
-    public ReportBuilder.QualityReport perform(Setting setting, QueryOverOps queryOverOps) throws IOException, InterruptedException {
+    public ReportBuilder.QualityReport perform(Setting setting, QueryOverOps queryOverOps, BuildProgressLogger logger) throws IOException, InterruptedException {
         PrintStream printStream;
-
         if (convertToMinutes(queryOverOps.getBaselineTimespan()) > 0) {
             runRegressions = true;
         }
-
         if (queryOverOps.isDebug()) {
-            printStream = new PrintStream(System.out);
+            printStream = new TeamCityPrintWriter(System.out, logger);
         } else {
             printStream = null;
         }
@@ -46,7 +45,7 @@ public class OverOpsServiceImpl implements OverOpsService {
             apiClient.addObserver(new ApiClientObserver(printStream, queryOverOps.isDebug()));
         }
 
-        SummarizedView allEventsView = ViewUtil.getServiceViewByName(apiClient, queryOverOps.getServiceId().toUpperCase(), "All Events");
+        SummarizedView allEventsView = ViewUtil.getServiceViewByName(apiClient, setting.getOverOpsSID().toUpperCase(), "All Events");
 
         if (Objects.isNull(allEventsView)) {
             if(Objects.nonNull(printStream)) {
@@ -56,7 +55,7 @@ public class OverOpsServiceImpl implements OverOpsService {
                     "Could not acquire ID for 'All Events'. Please check connection to " + setting.getOverOpsURL());
         }
 
-        RegressionInput input = setupRegressionData(queryOverOps, allEventsView, printStream);
+        RegressionInput input = setupRegressionData(setting, queryOverOps, allEventsView, printStream);
         return ReportBuilder.execute(apiClient, input, queryOverOps.getMaxErrorVolume(), queryOverOps.getMaxUniqueErrors(),
                 queryOverOps.getPrintTopIssues(), queryOverOps.getRegexFilter(), queryOverOps.isNewEvents(), queryOverOps.isResurfacedErrors(),
                 runRegressions, queryOverOps.isMarkUnstable(), printStream, queryOverOps.isDebug());
@@ -69,7 +68,7 @@ public class OverOpsServiceImpl implements OverOpsService {
             printStream.println("Build Step: Starting OverOps Quality Gate....");
         }
         try {
-            Thread.sleep(60000);
+            Thread.sleep(30000);
         } catch (Exception e) {
             if (Objects.nonNull(printStream)) {
                 printStream.println("Can not hold the process.");
@@ -91,13 +90,13 @@ public class OverOpsServiceImpl implements OverOpsService {
 
         //validate active and baseline time window
         if (queryOverOps.getCheckRegressionErrors()) {
-            if (!queryOverOps.getActiveTimespan().equalsIgnoreCase("0")) {
+            if (!"0".equalsIgnoreCase(queryOverOps.getActiveTimespan())) {
                 if (convertToMinutes(queryOverOps.getActiveTimespan()) == 0) {
                     printStream.println("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() +  " is not properly formated. See help for format instructions.");
                     throw new IllegalArgumentException("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() +  " is not properly formated. See help for format instructions.");
                 }
             }
-            if (!queryOverOps.getBaselineTimespan().equalsIgnoreCase("0")) {
+            if (!"0".equalsIgnoreCase(queryOverOps.getBaselineTimespan())) {
                 if (convertToMinutes(queryOverOps.getBaselineTimespan()) == 0) {
                     printStream.println("For Increasing Error Gate, the baseline timewindow currently set to: " + queryOverOps.getBaselineTimespan() + " cannot be zero or is improperly formated. See help for format instructions.");
                     throw new IllegalArgumentException("For Increasing Error Gate, the baseline timewindow currently set to: " + queryOverOps.getBaselineTimespan() + " cannot be zero or is improperly formated. See help for format instructions.");
@@ -106,17 +105,17 @@ public class OverOpsServiceImpl implements OverOpsService {
         }
 
 
-        if (StringUtils.isEmpty(queryOverOps.getServiceId())) {
+        if (StringUtils.isEmpty(setting.getOverOpsSID())) {
             throw new IllegalArgumentException("Missing environment Id");
         }
 
     }
 
-    private RegressionInput setupRegressionData(QueryOverOps queryOverOps, SummarizedView allEventsView, PrintStream printStream)
+    private RegressionInput setupRegressionData(Setting setting, QueryOverOps queryOverOps, SummarizedView allEventsView, PrintStream printStream)
             throws InterruptedException, IOException {
 
         RegressionInput input = new RegressionInput();
-        input.serviceId = queryOverOps.getServiceId();
+        input.serviceId = setting.getOverOpsSID();
         input.viewId = allEventsView.id;
         input.applictations = parseArrayString(queryOverOps.getApplicationName(), printStream, "Application Name");
         input.deployments = parseArrayString(queryOverOps.getDeploymentName(), printStream, "Deployment Name");

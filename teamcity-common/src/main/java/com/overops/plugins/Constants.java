@@ -24,6 +24,7 @@ public class Constants {
     public static final String FIELD_PROJECT_ID = "projectId";
     public static final String FIELD_TESTING = "testing";
 
+    public static final String FIELD_CHECK_URL = "url";
     public static final String FIELD_CHECK_NEW_ERROR = "checkNewErrors";
     public static final String FIELD_CHECK_RESURFACED_ERRORS = "checkResurfacedErrors";
     public static final String FIELD_VOLUME_ERRORS = "checkVolumeErrors";
@@ -45,6 +46,7 @@ public class Constants {
 
     public static final String DEFAULT_APP_NAME = "%system.teamcity.projectName%";
     public static final String DEFAULT_DEPLOYMENT_NAME = "%build.number%";
+    public static final String DEFAULT_URL = "https://api.overops.com";
     public static final String DEFAULT_CHECK_NEW_ERROR = "true";
     public static final String DEFAULT_CHECK_RESURFACED_ERRORS = "true";
     public static final String DEFAULT_VOLUME_ERRORS = "true";

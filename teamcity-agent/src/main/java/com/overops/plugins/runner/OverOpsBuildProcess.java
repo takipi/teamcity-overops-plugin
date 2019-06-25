@@ -58,10 +58,8 @@ public class OverOpsBuildProcess implements BuildProcess {
         try {
             return processFuture.get();
         } catch (final InterruptedException | CancellationException e) {
-            logger.error("InterruptedException: " + e.getMessage());
             return BuildFinishedStatus.INTERRUPTED;
         } catch (final ExecutionException | IllegalStateException e) {
-            logger.error("ExecutionException | IllegalStateException: " + e.getMessage());
             return BuildFinishedStatus.FINISHED_FAILED;
         } finally {
             executor.shutdown();

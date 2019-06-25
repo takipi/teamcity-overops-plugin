@@ -7,6 +7,7 @@ import jetbrains.buildServer.serverSide.RunType;
 import jetbrains.buildServer.serverSide.RunTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -41,7 +42,15 @@ public class OverOpsRunType extends RunType {
             @Override
             public Collection<InvalidProperty> process(Map<String, String> map) {
                 List<InvalidProperty> result = new ArrayList<InvalidProperty>();
-                //TODO here will be validation
+                if(StringUtils.isEmpty(map.get("url"))) {
+                    result.add(new InvalidProperty("url", "OverOpsURL is required."));
+                }
+                if(StringUtils.isEmpty(map.get("envId"))) {
+                    result.add(new InvalidProperty("envId", "OverOps Environment ID."));
+                }
+                if(StringUtils.isEmpty(map.get("token"))) {
+                    result.add(new InvalidProperty("token", "OverOps API Token."));
+                }
                 return result;
             }
         };
@@ -66,6 +75,7 @@ public class OverOpsRunType extends RunType {
         Map<String, String> map = new HashMap<>();
         map.put(Constants.APP_NAME, Constants.DEFAULT_APP_NAME);
         map.put(Constants.DEPLOYMENT_NAME, Constants.DEFAULT_DEPLOYMENT_NAME);
+        map.put(Constants.FIELD_CHECK_URL, Constants.DEFAULT_URL);
         map.put(Constants.FIELD_CHECK_NEW_ERROR, Constants.DEFAULT_CHECK_NEW_ERROR);
         map.put(Constants.FIELD_CHECK_RESURFACED_ERRORS, Constants.DEFAULT_CHECK_RESURFACED_ERRORS);
         map.put(Constants.FIELD_VOLUME_ERRORS, Constants.DEFAULT_VOLUME_ERRORS);

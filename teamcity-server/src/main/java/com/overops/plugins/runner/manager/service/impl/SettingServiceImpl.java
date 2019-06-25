@@ -50,8 +50,6 @@ public class SettingServiceImpl implements SettingService, ProjectSettingsFactor
     @Override
     public GeneralSetting getSetting(String projectId) {
         SProject project = Optional.ofNullable(getProject(projectId)).orElse(getProjectByExternalId(projectId));
-        System.out.println("getSetting");
-        System.out.println(project);
         return project
                 .getOwnFeaturesOfType(OVER_OPS_MANAGER_KEY).stream()
                 .map(ParametersDescriptor::getParameters)
@@ -62,7 +60,6 @@ public class SettingServiceImpl implements SettingService, ProjectSettingsFactor
     public GeneralSetting updateSetting(GeneralSetting setting, String projectId) {
         SProject project = Optional.ofNullable(getProject(projectId)).orElse(getProjectByExternalId(projectId));
         SProjectFeatureDescriptor features = project.getOwnFeaturesOfType(OVER_OPS_MANAGER_KEY).stream().findFirst().orElse(null);
-        System.out.println(features);
         if(Objects.nonNull(features)) {
             project.updateFeature(features.getId(), OVER_OPS_MANAGER_KEY, setting.toMap());
         } else {
@@ -117,7 +114,6 @@ public class SettingServiceImpl implements SettingService, ProjectSettingsFactor
         try {
             services = ClientUtil.getEnvironments(apiClient);
         } catch (Exception e) {
-            System.err.println(e);
             return false;
         }
 

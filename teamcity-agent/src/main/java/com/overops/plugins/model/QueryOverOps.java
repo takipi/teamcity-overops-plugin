@@ -14,7 +14,7 @@ public class QueryOverOps {
     private Integer maxErrorVolume;
     private Integer maxUniqueErrors;
     private String criticalExceptionTypes;
-    private Boolean checkRegressionErrors;
+    private boolean checkRegressionErrors;
     private String activeTimespan;
     private String baselineTimespan;
     private Integer minVolumeThreshold;
@@ -190,7 +190,7 @@ public class QueryOverOps {
         queryOverOps.applicationName = params.get("applicationName");
         queryOverOps.deploymentName = params.get("deploymentName");
         queryOverOps.serviceId = params.get("serviceId");
-        queryOverOps.regexFilter = params.get("regexFilter");
+        queryOverOps.regexFilter = params.getOrDefault("regexFilter", "");
         queryOverOps.markUnstable = Boolean.parseBoolean(params.getOrDefault("markUnstable", "false"));
         queryOverOps.printTopIssues = Integer.parseInt(params.getOrDefault("printTopIssues", "5"));
         if (Boolean.parseBoolean(params.getOrDefault("checkNewErrors", "false"))) {
@@ -206,7 +206,7 @@ public class QueryOverOps {
             queryOverOps.maxUniqueErrors = Integer.parseInt(params.getOrDefault("maxUniqueErrors", "0"));
         }
         if (Boolean.parseBoolean(params.getOrDefault("checkCriticalErrors", "false"))) {
-            queryOverOps.criticalExceptionTypes = params.get("criticalExceptionTypes");
+            queryOverOps.criticalExceptionTypes = params.getOrDefault("criticalExceptionTypes", "");
         }
         queryOverOps.setCheckRegressionErrors(Boolean.parseBoolean(params.getOrDefault("checkRegressionErrors", "false")));
         if (queryOverOps.getCheckRegressionErrors()) {

@@ -73,12 +73,6 @@
         </td>
     </tr>
     <tr>
-        <th class="noBorder"><label for="serviceId">Environment ID: </label></th>
-        <td>
-            <props:textProperty name="serviceId" className="longField"/>
-        </td>
-    </tr>
-    <tr>
         <th class="noBorder"><label for="regexFilter">Regex Filter: </label></th>
         <td>
             <props:textProperty name="regexFilter" className="longField"/>

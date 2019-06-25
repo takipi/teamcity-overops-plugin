@@ -204,6 +204,13 @@ public class ReportBuilder {
 		public boolean isMarkedUnstable() {
 			return markedUnstable;
 		}
+
+		public String getDeploymentName() {
+			String value = getInput().deployments.toString();
+			value = value.replace("[", "");
+			value = value.replace("]", "");
+			return value;
+		}
 	
 	}
 	
