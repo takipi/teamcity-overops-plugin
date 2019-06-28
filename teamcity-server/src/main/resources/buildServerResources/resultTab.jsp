@@ -11,30 +11,39 @@
         padding: 5px;
         text-align: left;
     }
+    .failed {
+        color: #ff0000;
+    }
+    .passed {
+        color: #008000;
+    }
+    .orange {
+        color: #FFA500;
+    }
 </style>
 <div class="overops-report">
     <h1><img src ="https://www.overops.com/assets/images/navigation/logo_regular.svg" height="32" style="margin-bottom: -8px"/> Quality Report</h1>
     <c:if test="${result.markedUnstable}">
         <c:if test="${result.unstable}">
-            <div style="color:#ff0000">
-                <h2>${result.summary}</h2>
+            <div >
+                <h2 class="failed">${result.summary}</h2>
             </div>
         </c:if>
         <c:if test="${!result.unstable}">
-            <div style="color:#008000">
-                <h2>${result.summary}</h2>
+            <div >
+                <h2 class="passed">${result.summary}</h2>
             </div>
         </c:if>
     </c:if>
     <c:if test="${!result.markedUnstable}">
         <c:if test="${result.unstable}">
-            <div style="color: #FFA500">
-                <h2>${result.summary}</h2>
+            <div >
+                <h2 class="orange">${result.summary}</h2>
             </div>
         </c:if>
         <c:if test="${!result.unstable}">
-            <div style="color:#008000">
-                <h2>${result.summary}</h2>
+            <div >
+                <h2 class="passed">${result.summary}</h2>
             </div>
         </c:if>
     </c:if>
