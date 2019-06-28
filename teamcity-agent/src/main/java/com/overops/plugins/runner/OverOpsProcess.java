@@ -1,17 +1,13 @@
 package com.overops.plugins.runner;
 
-import static com.overops.plugins.Constants.OV_REPORTS_FILE;
-import static com.overops.plugins.Constants.RUNNER_DISPLAY_NAME;
-import static com.overops.plugins.Constants.SETTING_ENV_ID;
-import static com.overops.plugins.Constants.SETTING_TOKEN;
-import static com.overops.plugins.Constants.SETTING_URL;
-
 import com.overops.plugins.Result;
 import com.overops.plugins.Util;
+import com.overops.plugins.model.OverOpsReportModel;
 import com.overops.plugins.model.QueryOverOps;
 import com.overops.plugins.model.Setting;
 import com.overops.plugins.service.OverOpsService;
 import com.overops.plugins.service.impl.ReportBuilder;
+import com.overops.plugins.utils.ReportUtils;
 import com.takipi.api.client.util.cicd.OOReportEvent;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +23,8 @@ import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
 import jetbrains.buildServer.messages.Status;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+
+import static com.overops.plugins.Constants.*;
 
 public class OverOpsProcess implements Callable<BuildFinishedStatus> {
 
@@ -62,8 +60,10 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
         try {
             ReportBuilder.QualityReport report = overOpsService.perform(setting, params, logger);
             boolean unstable = report.isMarkedUnstable() && report.getUnstable();
-            publishArtifacts(unstable);
             String summary = getSummary(report);
+            publishArtifacts(unstable);
+            publishReportArtifact(ReportUtils.copyResult(report));
+
             if (unstable) {
                 logger.message(summary, Status.FAILURE);
                 return BuildFinishedStatus.FINISHED_WITH_PROBLEMS;
@@ -90,6 +90,20 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
             Util.objectToString(result).ifPresent(o -> appendStringToFile(file, o));
         } catch (IOException e) {
             logger.error("Cannot create artifact: " + e.getMessage());
+        }
+        artifactsWatcher.addNewArtifactsPath(file + "=>" + RUNNER_DISPLAY_NAME);
+    }
+
+    private void publishReportArtifact(OverOpsReportModel report) {
+        File buildDirectory = new File(agentRunningBuild.getBuildTempDirectory() + "/" +
+                agentRunningBuild.getProjectName() + "/" + agentRunningBuild.getBuildTypeName() + "/" +
+                agentRunningBuild.getBuildNumber() + "/" + RUNNER_DISPLAY_NAME);
+        File file = new File(buildDirectory, OV_REPORTS_FILE_RESULT);
+        try {
+            FileUtils.touch(file);
+            Util.objectToString(report).ifPresent(o -> appendStringToFile(file, o));
+        } catch (IOException e) {
+            logger.error("Cannot create result artifact: " + e.getMessage());
         }
         artifactsWatcher.addNewArtifactsPath(file + "=>" + RUNNER_DISPLAY_NAME);
     }

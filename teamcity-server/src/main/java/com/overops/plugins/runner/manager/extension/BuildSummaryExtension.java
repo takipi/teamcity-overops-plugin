@@ -48,8 +48,7 @@ public class BuildSummaryExtension extends SimplePageExtension {
             .map(a -> a.getArtifact(Constants.RUNNER_DISPLAY_NAME + "/" + Constants.OV_REPORTS_FILE))
             .ifPresent(artifact -> {
                 try {
-                    Util.stringToObject(artifact.getInputStream(), Result.class).ifPresent(result -> {
-                        System.out.println(result);
+                    Util.streamToObject(artifact.getInputStream(), Result.class).ifPresent(result -> {
                         model.put("report", result.isReport());
                         model.put("unstable", result.isUnstable());
                     });

@@ -7,7 +7,7 @@ public class Setting {
 
     public Setting(String overOpsURL, String overOpsSID, String overOpsAPIKey) {
         this.overOpsURL = overOpsURL;
-        this.overOpsSID = overOpsSID;
+        this.overOpsSID = overOpsSID.toUpperCase();
         this.overOpsAPIKey = overOpsAPIKey;
     }
 

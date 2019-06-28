@@ -73,13 +73,13 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-web:4.3.12.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-webmvc:4.3.12.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: taglibs:standard:1.1.2" level="project" />
-    <orderEntry type="library" name="Maven: com.takipi:api-client:2.20.0" level="project" />
+    <orderEntry type="library" name="Maven: com.takipi:api-client:2.22.0" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:20.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.2" level="project" />
-    <orderEntry type="library" name="Maven: com.takipi:api-client-util:2.20.0" level="project" />
+    <orderEntry type="library" name="Maven: com.takipi:api-client-util:2.22.0" level="project" />
     <orderEntry type="library" name="Maven: org.ocpsoft.prettytime:prettytime:4.0.2.Final" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />

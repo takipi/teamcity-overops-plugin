@@ -11,5 +11,7 @@
     <bean id="editSettingControllerExtension" class="com.overops.plugins.runner.manager.controller.EditSettingControllerExtension"/>
 
     <bean id="settingServiceImpl" class="com.overops.plugins.runner.manager.service.impl.SettingServiceImpl"/>
+
+    <bean id="resultTab" class="com.overops.plugins.runner.manager.extension.BuildResultTab"/>
 </beans>
 

@@ -25,16 +25,27 @@ public final class Util {
         try {
             return Optional.of(mapper.writeValueAsString(object));
         } catch (JsonProcessingException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Can not convert object to string");
             return Optional.empty();
         }
     }
 
-    public static <T> Optional<T> stringToObject(InputStream stream, Class<T> clazz) {
+    public static <T> Optional<T> streamToObject(InputStream stream, Class<T> clazz) {
         try {
             return Optional.of(mapper.readValue(stream, clazz));
         } catch (IOException e) {
+            System.err.println("Can not convert string to object");
             return Optional.empty();
+        }
+    }
+
+    public static <T> T stringToObject(String object, Class<T> clazz) {
+        try {
+            return mapper.readValue(object, clazz);
+        } catch (IOException e) {
+            System.err.println("Can not convert string to object");
+            System.err.println(e.getMessage());
+            return null;
         }
     }
 
