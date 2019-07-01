@@ -210,8 +210,8 @@ public class QueryOverOps {
         }
         queryOverOps.setCheckRegressionErrors(Boolean.parseBoolean(params.getOrDefault("checkRegressionErrors", "false")));
         if (queryOverOps.getCheckRegressionErrors()) {
-            queryOverOps.activeTimespan = params.get("activeTimespan");
-            queryOverOps.baselineTimespan = params.get("baselineTimespan");
+            queryOverOps.activeTimespan = params.getOrDefault("activeTimespan", "0");
+            queryOverOps.baselineTimespan = params.getOrDefault("baselineTimespan", "0");
             queryOverOps.minVolumeThreshold = Integer.parseInt(params.getOrDefault("minVolumeThreshold", "0"));
             queryOverOps.minErrorRateThreshold = Double.parseDouble(params.getOrDefault("minErrorRateThreshold", "0"));
             queryOverOps.regressionDelta = Double.parseDouble(params.getOrDefault("regressionDelta", "0"));
