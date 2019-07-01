@@ -22,7 +22,7 @@
     }
 </style>
 <div class="overops-report">
-    <h1><img src ="${teamcityPluginResourcesPath}/img/logo_regular.svg" height="32" style="margin-bottom: -8px"/> Quality Report</h1>
+    <h1><img src ="${teamcityPluginResourcesPath}img/logo_regular.svg" height="32" style="margin-bottom: -8px"/> Quality Report</h1>
     <c:if test="${result.markedUnstable}">
         <c:if test="${result.unstable}">
             <div >
