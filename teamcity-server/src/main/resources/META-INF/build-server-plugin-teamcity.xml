@@ -6,7 +6,7 @@
     <bean id="overOpsRunType" class="com.overops.plugins.runner.runner.OverOpsRunType"/>
     <bean id="buildSummaryExtension" class="com.overops.plugins.runner.manager.extension.BuildSummaryExtension"/>
 
-    <bean id="generalSettingTab" class="com.overops.plugins.runner.manager.extension.GeneralSettingTab"/>
+    <!--<bean id="generalSettingTab" class="com.overops.plugins.runner.manager.extension.GeneralSettingTab"/>-->
     <bean id="settingActionController" class="com.overops.plugins.runner.manager.controller.SettingActionController"/>
     <bean id="editSettingControllerExtension" class="com.overops.plugins.runner.manager.controller.EditSettingControllerExtension"/>
 

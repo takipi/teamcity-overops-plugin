@@ -8,7 +8,7 @@
 
   <name>OverOps plugin</name>
   <description>This plugin will check a build for errors in OverOps.</description>
-  <url>GitHubLink</url>
+  <url>https://github.com/takipi/teamcity-overops-plugin</url>
 
   <organization>
     <name>OverOps</name>

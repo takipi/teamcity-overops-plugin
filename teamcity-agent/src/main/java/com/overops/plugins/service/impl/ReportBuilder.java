@@ -1,6 +1,5 @@
 package com.overops.plugins.service.impl;
 
-import com.google.common.base.Objects;
 import com.google.gson.Gson;
 import com.overops.plugins.model.OOReportRegressedEvent;
 import com.takipi.api.client.ApiClient;
@@ -155,10 +154,13 @@ public class ReportBuilder {
 		}
 
 		public String getDeploymentName() {
-			String value = getInput().deployments.toString();
-			value = value.replace("[", "");
-			value = value.replace("]", "");
-			return value;
+			if (Objects.nonNull(getInput()) && Objects.nonNull(getInput().deployments)) {
+				String value = getInput().deployments.toString();
+				value = value.replace("[", "");
+				value = value.replace("]", "");
+				return value;
+			}
+			return "";
 		}
 	}
 	

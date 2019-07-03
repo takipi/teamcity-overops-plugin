@@ -11,7 +11,7 @@
     <tr>
         <th class="noBorder"><label for="url">OverOpsURL: </label></th>
         <td>
-            <props:textProperty name="url" className="longField" value="${url}"/>
+            <props:textProperty id="url" name="url" className="longField"/>
         </td>
     </tr>
     <tr>
@@ -27,7 +27,7 @@
     <tr>
         <th class="noBorder"><label for="envId">OverOps Environment ID: </label></th>
         <td>
-            <props:textProperty name="envId" className="longField" value="${envId}" />
+            <props:textProperty name="envId" id="envId" className="longField" />
         </td>
     </tr>
     <tr>
@@ -43,7 +43,7 @@
     <tr>
         <th class="noBorder"><label for="token">OverOps API Token: </label></th>
         <td>
-            <props:textProperty name="token" className="longField" value="${token}"/>
+            <props:textProperty id="token" name="token" className="longField" />
         </td>
     </tr>
     <tr>
@@ -56,7 +56,18 @@
             </div>
         </td>
     </tr>
-
+    <tr>
+        <td class="help-button" colspan="2">
+            <a class="btn cancel" onclick="testConnection()">Test Connection</a>
+        </td>
+    </tr>
+    <bs:dialog dialogId="testConnectionDialog"
+               title="Test Connection"
+               closeCommand="BS.TestConnectionDialog.close();"
+               closeAttrs="showdiscardchangesmessage='false'">
+        <div id="testConnectionStatus">Connection successful!</div>
+        <div id="testConnectionDetails" class="mono">Test completed successfully</div>
+    </bs:dialog>
 </l:settingsGroup>
 
 <l:settingsGroup title="General Settings" className="generalSettings">
@@ -207,7 +218,60 @@
         </td>
     </tr>
 </l:settingsGroup>
+<style>
+    .error_setting {
+        border: 2px solid red !important;
+    }
+</style>
 <script type="text/javascript">
+    function validation(url, token, envId) {
+        var valid = true;
+        if (token === null || token === undefined || token === "") {
+            valid = false;
+            document.getElementById("token").classList.add("errorField")
+            document.getElementById("token").focus()
+        } else {
+            document.getElementById("token").classList.remove("errorField")
+        }
+        if (envId === null || envId === undefined || envId === "") {
+            valid = false;
+            document.getElementById("envId").classList.add("errorField")
+            document.getElementById("envId").focus()
+        } else {
+            document.getElementById("envId").classList.remove("errorField")
+        }
+        if (url === null || url === undefined || url === "") {
+            valid = false;
+            document.getElementById("url").classList.add("errorField")
+            document.getElementById("url").focus()
+        } else {
+            document.getElementById("url").classList.remove("errorField")
+        }
+        return valid;
+    }
+    function testConnection() {
+
+        var url = document.getElementById("url").value;
+        var token = document.getElementById("token").value;
+        var envId = document.getElementById("envId").value;
+
+
+        if (validation(url, token, envId)) {
+            BS.ajaxRequest(window['base_uri'] + '/admin/manageOverOps.html', {
+                parameters: Object.toQueryString({
+                    "testing" : true,
+                    "overops.url": url,
+                    "overops.env.id": envId,
+                    "overops.token" : token
+                }),
+                onComplete: function(response) {
+                    var status = response['responseXML'].childNodes[0].getAttribute('status') === "OK";
+                    var text = response['responseXML'].childNodes[0].getAttribute('message')
+                    BS.TestConnectionDialog.show(status, text, $('testConnection'));
+                }
+            });
+        }
+    }
     jQuery(function () {
         jQuery('tr').find('.commutator').each(function(){
             if(!jQuery(this).is(':checked')) {

@@ -119,7 +119,6 @@
                 </table>
             </c:if>
         </table>
-        <h2> </h2>
     </c:if>
     <c:if test="${result.checkCriticalErrors}">
         <table style="width:100%">
@@ -139,7 +138,6 @@
                 </table>
             </c:if>
         </table>
-        <h2> </h2>
     </c:if>
     <c:if test="${result.checkRegressedErrors}">
         <table style="width:100%">

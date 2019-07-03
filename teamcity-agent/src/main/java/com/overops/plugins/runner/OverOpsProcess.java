@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import jetbrains.buildServer.agent.AgentRunningBuild;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
@@ -54,7 +55,6 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
 
         Setting setting = new Setting(context.getRunnerParameters().get(SETTING_URL),
             context.getRunnerParameters().get(SETTING_ENV_ID), context.getRunnerParameters().get(SETTING_TOKEN));
-
         QueryOverOps params = QueryOverOps.mapToObject(context.getRunnerParameters());
         params.setServiceId(setting.getOverOpsSID());
         try {
@@ -63,7 +63,6 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
             String summary = getSummary(report);
             publishArtifacts(unstable);
             publishReportArtifact(ReportUtils.copyResult(report));
-
             if (unstable) {
                 logger.message(summary, Status.FAILURE);
                 return BuildFinishedStatus.FINISHED_WITH_PROBLEMS;
@@ -73,7 +72,7 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
             logger.error("Failed to start OverOps test: " + e.getMessage());
             return BuildFinishedStatus.INTERRUPTED;
         } catch (Exception e) {
-            logger.error("Caught exception: " + e.getMessage());
+            logger.error("Caught exception: " + e.toString() + "\n " + Arrays.toString(e.getStackTrace()));
             return BuildFinishedStatus.FINISHED_FAILED;
         }
         return BuildFinishedStatus.FINISHED_SUCCESS;

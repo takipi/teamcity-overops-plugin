@@ -19,7 +19,7 @@ public class ReportEventModel {
         this.introducedBy = introducedBy;
     }
 
-    public ReportEventModel(String arcLink, String type, String introducedBy, String eventSummary, String eventRate, long hits, long calls) {
+    public ReportEventModel(String arcLink, String type, String introducedBy, String eventSummary, String eventRate, long hits, long calls, String applications) {
         this.arcLink = arcLink;
         this.type = type;
         this.introducedBy = introducedBy;
@@ -27,6 +27,7 @@ public class ReportEventModel {
         this.eventRate = eventRate;
         this.hits = hits;
         this.calls = calls;
+        this.applications = applications;
     }
 
     public String getArcLink() {

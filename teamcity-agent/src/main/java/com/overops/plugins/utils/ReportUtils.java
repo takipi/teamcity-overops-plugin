@@ -7,6 +7,7 @@ import com.takipi.api.client.util.cicd.OOReportEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,15 +21,15 @@ public class ReportUtils {
         result.setPassedNewErrorGate(getPassedNewErrorGate(report));
         result.setCheckNewEvents(getCheckNewEvents(report));
         result.setNewErrorSummary(getNewErrorSummary(report));
-        result.setNewEvents(getNewEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls())).collect(Collectors.toList()));
+        result.setNewEvents(getNewEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
         result.setPassedResurfacedErrorGate(getPassedResurfacedErrorGate(report));
         result.setCheckResurfacedEvents(getCheckResurfacedEvents(report));
         result.setResurfacedErrorSummary(getResurfacedErrorSummary(report));
-        result.setResurfacedEvents(getResurfacedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls())).collect(Collectors.toList()));
+        result.setResurfacedEvents(getResurfacedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
         result.setCheckCriticalErrors(getCheckCriticalErrors(report));
         result.setPassedCriticalErrorGate(getPassedCriticalErrorGate(report));
         result.setCriticalErrorSummary(getCriticalErrorSummary(report));
-        result.setCriticalEvents(getCriticalEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls())).collect(Collectors.toList()));
+        result.setCriticalEvents(getCriticalEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
         result.setCheckTotalErrors(getCheckTotalErrors(report));
         result.setPassedTotalErrorGate(getPassedTotalErrorGate(report));
         result.setTotalErrorSummary(getTotalErrorSummary(report));
@@ -36,19 +37,18 @@ public class ReportUtils {
         result.setHasTopErrors(getHasTopErrors(report));
         result.setPassedUniqueErrorGate(getPassedUniqueErrorGate(report));
         result.setUniqueErrorSummary(getUniqueErrorSummary(report));
-        result.setTopEvents(getTopEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls())).collect(Collectors.toList()));
+        result.setTopEvents(getTopEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
         result.setRegressionSumarry(getRegressionSumarry(report));
         result.setCheckRegressedErrors(getCheckRegressedErrors(report));
         result.setPassedRegressedEvents(getPassedRegressedEvents(report));
-        result.setRegressedEvents(getRegressedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls())).collect(Collectors.toList()));
+        result.setRegressedEvents(getRegressedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
         return result;
     }
 
     private static String getDeploymentName(ReportBuilder.QualityReport report) {
-        String value = report.getInput().deployments.toString();
-        value = value.replace("[", "");
-        value = value.replace("]", "");
-        return value;
+        return Optional.of(report.getInput()).filter(e -> Objects.nonNull(e.deployments))
+                .map(e -> e.deployments).map(Object::toString).map(e -> e.replace("[", ""))
+                .map(e -> e.replace("]", "")).orElse("");
     }
 
     private static String getSummary(ReportBuilder.QualityReport report) {
@@ -73,7 +73,7 @@ public class ReportUtils {
     }
 
     private static String getNewErrorSummary(ReportBuilder.QualityReport report) {
-        if (getNewEvents(report) != null && getNewEvents(report).size() > 0) {
+        if (getNewEvents(report).size() > 0) {
             return "New Error Gate: Failed, OverOps detected " + report.getNewIssues().size() + " new error(s) in your build.";
         } else if (report.isCheckNewGate()) {
             return "New Error Gate: Passed, OverOps did not detect any new errors in your build.";
@@ -83,7 +83,7 @@ public class ReportUtils {
     }
 
     private static boolean getNewErrorsExist(ReportBuilder.QualityReport report) {
-        return getNewEvents(report) != null && getNewEvents(report).size() > 0;
+        return getNewEvents(report).size() > 0;
     }
 
     private static List<OOReportEvent> getNewEvents(ReportBuilder.QualityReport report) {
@@ -95,7 +95,7 @@ public class ReportUtils {
     }
 
     private static boolean getResurfacedErrorsExist(ReportBuilder.QualityReport report) {
-        return getResurfacedEvents(report) != null && getResurfacedEvents(report).size() > 0;
+        return getResurfacedEvents(report).size() > 0;
     }
 
     private static boolean getCheckResurfacedEvents(ReportBuilder.QualityReport report) {
@@ -103,7 +103,7 @@ public class ReportUtils {
     }
 
     private static String getResurfacedErrorSummary(ReportBuilder.QualityReport report) {
-        if (getResurfacedEvents(report) != null && getResurfacedEvents(report).size() > 0) {
+        if (getResurfacedEvents(report).size() > 0) {
             return "Resurfaced Error Gate: Failed, OverOps detected " + report.getResurfacedErrors().size() + " resurfaced errors in your build.";
         } else if (report.isCheckResurfacedGate()) {
             return "Resurfaced Error Gate: Passed, OverOps did not detect any resurfaced errors in your build.";
@@ -125,11 +125,11 @@ public class ReportUtils {
     }
 
     private static boolean getCriticalErrorsExist(ReportBuilder.QualityReport report) {
-        return getCriticalEvents(report) != null && getCriticalEvents(report).size() > 0;
+        return getCriticalEvents(report).size() > 0;
     }
 
     private static String getCriticalErrorSummary(ReportBuilder.QualityReport report) {
-        if (getCriticalEvents(report) != null && getCriticalEvents(report).size() > 0) {
+        if (getCriticalEvents(report).size() > 0) {
             return "Critical Error Gate: Failed, OverOps detected " + report.getCriticalErrors().size() + " critical errors in your build.";
         } else if (report.isCheckCriticalGate()) {
             return "Critical Error Gate: Passed, OverOps did not detect any critical errors in your build.";
@@ -191,10 +191,11 @@ public class ReportUtils {
     }
 
     private static String getRegressionSumarry(ReportBuilder.QualityReport report) {
+        String baselineTime = Objects.nonNull(report.getInput()) ? report.getInput().baselineTime : "";
         if (!getPassedRegressedEvents(report)) {
-            return "Increasing Quality Gate: Failed, OverOps detected incressing errors in the current build against the baseline of " + report.getInput().baselineTime;
+            return "Increasing Quality Gate: Failed, OverOps detected increasing errors in the current build against the baseline of " + baselineTime;
         } else if (getPassedRegressedEvents(report)) {
-            return "Increasing Quality Gate: Passed, OverOps did not detect any increasing errors in the current build against the baseline of " + report.getInput().baselineTime;
+            return "Increasing Quality Gate: Passed, OverOps did not detect any increasing errors in the current build against the baseline of " + baselineTime;
         }
 
         return null;
