@@ -7,7 +7,7 @@
     </formats>
     <files>
         <file>
-            <source>../teamcity-agent/teamcity-plugin.xml</source>
+            <source>../overops-agent/teamcity-plugin.xml</source>
             <outputDirectory>/</outputDirectory>
         </file>
     </files>
@@ -15,8 +15,8 @@
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
-                <include>com.overops.plugins:teamcity-agent</include>
-                <include>com.overops.plugins:teamcity-common</include>
+                <include>com.overops.plugins:overops-agent</include>
+                <include>com.overops.plugins:overops-common</include>
             </includes>
             <binaries>
                 <outputDirectory>lib</outputDirectory>

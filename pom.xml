@@ -79,9 +79,9 @@
         </pluginManagement>
     </build>
     <modules>
-        <module>teamcity-server</module>
-        <module>teamcity-agent</module>
-        <module>teamcity-common</module>
+        <module>overops-server</module>
+        <module>overops-agent</module>
+        <module>overops-common</module>
         <module>build</module>
     </modules>
 </project>

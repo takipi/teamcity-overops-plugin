@@ -1,6 +1,0 @@
-com/overops/plugins/Constants.class
-com/overops/plugins/Util.class
-com/overops/plugins/model/ReportEventModel.class
-com/overops/plugins/model/OverOpsReportModel.class
-com/overops/plugins/Result.class
-com/overops/plugins/model/ReportRegressedModel.class

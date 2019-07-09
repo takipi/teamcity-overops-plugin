@@ -17,17 +17,17 @@
   <dependencies>
       <dependency>
            <groupId>com.overops.plugins</groupId>
-           <artifactId>teamcity-agent</artifactId>
+           <artifactId>overops-agent</artifactId>
            <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
            <groupId>com.overops.plugins</groupId>
-           <artifactId>teamcity-common</artifactId>
+           <artifactId>overops-common</artifactId>
            <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
            <groupId>com.overops.plugins</groupId>
-           <artifactId>teamcity-server</artifactId>
+           <artifactId>overops-server</artifactId>
            <version>1.0-SNAPSHOT</version>
       </dependency>
   </dependencies>

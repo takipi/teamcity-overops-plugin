@@ -19,8 +19,8 @@
     <moduleSet>
        <useAllReactorProjects>true</useAllReactorProjects>
        <includes>
-           <include>com.overops.plugins:teamcity-server</include>
-           <include>com.overops.plugins:teamcity-common</include>
+           <include>com.overops.plugins:overops-server</include>
+           <include>com.overops.plugins:overops-common</include>
        </includes> 
        <binaries>
            <outputDirectory>server</outputDirectory>

@@ -8,9 +8,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="teamcity-agent" />
-    <orderEntry type="module" module-name="teamcity-common" />
-    <orderEntry type="module" module-name="teamcity-server" />
+    <orderEntry type="module" module-name="overops-agent" />
+    <orderEntry type="module" module-name="overops-common" />
+    <orderEntry type="module" module-name="overops-server" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.9" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.9" level="project" />
