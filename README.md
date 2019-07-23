@@ -6,6 +6,8 @@ Run this plugin as a post build step after all other testing is complete to gene
 
 For more information about the plugin, quality gates, and for regression testing examples, see the Teamcity Plugin Guide.
 
+![OverOps Reliability Report](readme_images/OO_qr.png)
+
 ## Installation
 
    Prerequisites
@@ -15,7 +17,9 @@ For more information about the plugin, quality gates, and for regression testing
 
 Install the OverOps Query Plugins List through the Adminstration Page. From the Teamcity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → scroll down to OverOps Query Plugin → click the get button → select Teamcity server.
 
-## Navigate to OverOps Plugin Configuration
+![Configuration Form](readme_images/teamcity_buildstep.png)
+
+## OverOps Plugin Configuration
 
 After installing the OverOps Plugin, configure it to connect to OverOps.
 From the Teamcity homepage select your project → Edit Project Settings → select Build Configuration → Build Step → Add Build Step → Select OverOps Runner from the Runner type drop down.
@@ -31,6 +35,8 @@ The default OverOps environment identifier (e.g. S12345) if none is specified in
 ## OverOps API Token
 
 The OverOps REST API token to use for authentication. This can be obtained from the OverOps dashboard under Settings → Account.
+
+![Extra Configurations](readme_images/teamcity_extra_config.png)
 
 ## Application Name
 
