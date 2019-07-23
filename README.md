@@ -5,7 +5,7 @@ Run this plugin as a post build step after all other testing is complete to gene
 
 For more information about the plugin, quality gates, and for regression testing examples, see the Teamcity Plugin Guide.
 
-#Installation
+# Installation
 
 	Prerequisites
 
@@ -14,64 +14,64 @@ For more information about the plugin, quality gates, and for regression testing
 
 Install the OverOps Query Plugins List through the Adminstration Page. From the Teamcity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → scroll down to OverOps Query Plugin → Get → select Teamcity server.
 
-#Navigate to OverOps Plugin Configuration
+# Navigate to OverOps Plugin Configuration
 After installing the OverOps Plugin, configure it to connect to OverOps.
 From the Teamcity homepage select your project → Edit Project Settings → select Build Configuration → Build Step → Add Build Step → Select OverOps Runner from the Runner type drop down.
 
-#OverOps URL
+# OverOps URL
 The complete URL of the OverOps API, including port. https://api.overops.com for SaaS or http://host.domain.com:8080 for on prem
 
-#OverOps Environment ID
+# OverOps Environment ID
 The default OverOps environment identifier (e.g. S12345) if none is specified in the build settings. Make sure the "S" is capitalized.
 
-#OverOps API Token 
+# OverOps API Token 
 The OverOps REST API token to use for authentication. This can be obtained from the OverOps dashboard under Settings → Account.
 
-#Application Name
+# Application Name
 Optional) Application Name as specified in OverOps
 
 	* If populated, the plugin will filter the data for the specific application in OverOps.
 	* If blank, no application filter will be applied in query.
 
-###Example: ${JOB_NAME}
+### Example: ${JOB_NAME}
 
-#Deployment Name 
+# Deployment Name 
 (Optional) Deployment Name as specified in OverOps or use Jenkins environment variables.
 
-###Example: ${BUILD_NUMBER} or ${JOB_NAME }-${BUILD_NUMBER}
+### Example: ${BUILD_NUMBER} or ${JOB_NAME }-${BUILD_NUMBER}
 
 	* If populated, the plugin will filter the data for the specific deployment name in OverOps
 	* If blank, no deployment filter will be applied in the query.
 
-#Regex Filter
+# Regex Filter
 A way to filter out specific event types from affecting the outcome of the OverOps Reliability report.
 
 	* Sample list of event types, Uncaught Exception, Caught Exception,|Swallowed Exception, Logged Error, Logged Warning, Timer
 	* This filter enables the removal of one or more of these event types from the final results.
 	* Example filter expression with pipe separated list- "type":\"s*(Logged Error|Logged Warning|Timer)
 
-#Mark Build Unstable
+# Mark Build Unstable
 	* If checked the build will be marked unstable if any of the above gates are met.
 
-#Show Top Issues
+# Show Top Issues
 Prints the top X events (as provided by this parameter) with the highest volume of errors detected in the current build. This is used in conjunction with Max Error Volume and Unique Error Volume to identify the errors which caused a build to fail.
 
-#New Error Gate
+# New Error Gate
 Detect all new errors in the build. If found, the build will be marked as unstable.
 
-#Resurfaced Error Gate
+# Resurfaced Error Gate
 Detect all resurfaced errors in the build. If found, the build will be marked as unstable.
 
-#Total Error Volume Gate
+# Total Error Volume Gate
 Set the max total error volume allowed. If exceeded the build will be marked as unstable.
 
-#Unique Error Volume Gate
+# Unique Error Volume Gate
 Set the max unique error volume allowed. If exceeded the build will be marked as unstable.
 
-#Critical Exception Type Gate
+# Critical Exception Type Gate
 A comma delimited list of exception types that are deemed as severe regardless of their volume. If any events of any exceptions listed have a count greater than zero, the build will be marked as unstable.
 
-###Example: NullPointerException,IndexOutOfBoundsException
+### Example: NullPointerException,IndexOutOfBoundsException
 
 #Increasing Errors Gate
 
