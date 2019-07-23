@@ -13,7 +13,7 @@ For more information about the plugin, quality gates, and for regression testing
 * Teamcity version
 * Java version 1.8+
 
-Install the OverOps Query Plugins List through the Adminstration Page. From the Teamcity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → scroll down to OverOps Query Plugin → Get → select Teamcity server.
+Install the OverOps Query Plugins List through the Adminstration Page. From the Teamcity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → scroll down to OverOps Query Plugin → click the get button → select Teamcity server.
 
 ## Navigate to OverOps Plugin Configuration
 
@@ -34,7 +34,7 @@ The OverOps REST API token to use for authentication. This can be obtained from 
 
 ## Application Name
 
-Optional) Application Name as specified in OverOps
+Optional Application Name as specified in OverOps
 
 * If populated, the plugin will filter the data for the specific application in OverOps.
 * If blank, no application filter will be applied in query.
@@ -43,7 +43,7 @@ Optional) Application Name as specified in OverOps
 
 ## Deployment Name
 
-(Optional) Deployment Name as specified in OverOps or use Jenkins environment variables.
+(Optional) Deployment Name as specified in OverOps or use Teamcity environment variables.
 
 ### Example: ${BUILD_NUMBER} or ${JOB_NAME }-${BUILD_NUMBER}
 
