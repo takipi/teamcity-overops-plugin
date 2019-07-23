@@ -26,7 +26,7 @@ From the Teamcity homepage select your project → Edit Project Settings → sel
 
 ## OverOps URL
 
-The complete URL of the OverOps API, including port. `https://api.overops.com` for SaaS or `http://host.domain.com:8080` for on prem
+The complete URL of the OverOps API, including port. `https://api.overops.com` for SaaS or `http://host.domain.com:8080` for OnPrem setup
 
 ## OverOps Environment ID
 
