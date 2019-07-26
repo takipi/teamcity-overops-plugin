@@ -15,7 +15,7 @@ For more information about the plugin, quality gates, and for regression testing
 * TeamCity version 2019.1
 * Java version 1.8+
 
-Install the OverOps Query Plugins List through the Adminstration Page. From the TeamCity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → "scroll down to OverOps Query Plugin" → "Search for OverOps plugin" → click the get button → select TeamCity server.
+Install the OverOps Query Plugins List through the Adminstration Page. From the TeamCity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → "Search for OverOps plugin" → click the get button → select TeamCity server.
 
 ![Configuration Form](readme_images/teamcity_buildstep.png)
 
