@@ -6,7 +6,7 @@ Run this plugin as a post build step after all other testing is complete to gene
 
 For more information about the plugin, quality gates, and for regression testing examples, see the TeamCity Plugin Guide.
 
-![OverOps Reliability Report](readme_images/OO_qr.png)
+![OverOps Reliability Report](readme_images/teamcity_pr.png)
 
 ## Installation
 
