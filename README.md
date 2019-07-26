@@ -1,10 +1,10 @@
-# OverOps Reliability Report - Teamcity Plugin
+# OverOps Reliability Report - TeamCity Plugin
 
 This plugin provides a mechanism for applying OverOps severity assignment and regression analysis to new builds to allow application owners, DevOps engineers, and SREs to determine the quality of their code before promoting it into production.
 
 Run this plugin as a post build step after all other testing is complete to generate a Reliability Report that will determine the stability of the build. From the Reliability Report you can drill down into each specific error using the OverOps Automated Root Cause analysis screen to solve the issue.
 
-For more information about the plugin, quality gates, and for regression testing examples, see the Teamcity Plugin Guide.
+For more information about the plugin, quality gates, and for regression testing examples, see the TeamCity Plugin Guide.
 
 ![OverOps Reliability Report](readme_images/OO_qr.png)
 
@@ -12,17 +12,17 @@ For more information about the plugin, quality gates, and for regression testing
 
    Prerequisites
 
-* Teamcity version
+* TeamCity version 2019.1
 * Java version 1.8+
 
-Install the OverOps Query Plugins List through the Adminstration Page. From the Teamcity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → scroll down to OverOps Query Plugin → click the get button → select Teamcity server.
+Install the OverOps Query Plugins List through the Adminstration Page. From the TeamCity Administration Page, select Plugins List → Browse plugins repository → [JetBrains Plugins](https://plugins.jetbrains.com/teamcity) → "scroll down to OverOps Query Plugin" → "Search for OverOps plugin" → click the get button → select TeamCity server.
 
 ![Configuration Form](readme_images/teamcity_buildstep.png)
 
 ## OverOps Plugin Configuration
 
 After installing the OverOps Plugin, configure it to connect to OverOps.
-From the Teamcity homepage select your project → Edit Project Settings → select Build Configuration → Build Step → Add Build Step → Select OverOps Runner from the Runner type drop down.
+From the TeamCity homepage select your project → Edit Project Settings → select Build Configuration → Build Step → Add Build Step → Select OverOps Runner from the Runner type drop down.
 
 ## OverOps URL
 
@@ -45,13 +45,13 @@ Optional Application Name as specified in OverOps
 * If populated, the plugin will filter the data for the specific application in OverOps.
 * If blank, no application filter will be applied in query.
 
-### Example: ${JOB_NAME}
+### Example: %system.teamcity.projectName%
 
 ## Deployment Name
 
-(Optional) Deployment Name as specified in OverOps or use Teamcity environment variables.
+(Optional) Deployment Name as specified in OverOps or use TeamCity environment variables.
 
-### Example: ${BUILD_NUMBER} or ${JOB_NAME }-${BUILD_NUMBER}
+### Example: %build.number% or %system.teamcity.projectName% -%build.number%
 
 * If populated, the plugin will filter the data for the specific deployment name in OverOps
 * If blank, no deployment filter will be applied in the query.
@@ -98,8 +98,8 @@ A comma delimited list of exception types that are deemed as severe regardless o
 
 ### Combines the following parameters
 
-* Event Volume Threshold
-* Event Rate Threshold
+* Error Volume Threshold
+* Error Rate Threshold
 * Regression Delta
 * Critical Regression Threshold
 * Apply Seasonality
@@ -147,3 +147,7 @@ The change in percentage between an event's rate in the active time span compare
 ## Apply Seasonality
 
 If peaks have been seen in baseline window, then this would be considered normal and not a regression. Should the plugin identify an equal or matching peak in the baseline time window, or two peaks of greater than 50% of the volume seen in the active window, the event will not be marked as a regression.
+
+## Debug Mode
+
+If checked, all queries and results will be displayed in the OverOps reliability report. For debugging purposes only.
