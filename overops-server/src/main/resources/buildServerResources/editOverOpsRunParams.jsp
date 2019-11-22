@@ -96,7 +96,7 @@
         </td>
     </tr>
     <tr>
-        <th class="noBorder"><label for="printTopIssues">Show Top Issue: </label></th>
+        <th class="noBorder"><label for="printTopIssues">Show Top Issues: </label></th>
         <td>
             <props:textProperty name="printTopIssues" className="longField"/>
         </td>
