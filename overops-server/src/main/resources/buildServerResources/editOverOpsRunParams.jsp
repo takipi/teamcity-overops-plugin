@@ -1,11 +1,30 @@
-<%@ taglib prefix="props" tagdir="/WEB-INF/tags/props"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="bs" tagdir="/WEB-INF/tags"%>
-<%@ taglib prefix="forms" tagdir="/WEB-INF/tags/forms"%>
-<%@ taglib prefix="l" tagdir="/WEB-INF/tags/layout"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="props" tagdir="/WEB-INF/tags/props" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="bs" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="forms" tagdir="/WEB-INF/tags/forms" %>
+<%@ taglib prefix="l" tagdir="/WEB-INF/tags/layout" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
+
+<style>
+    .stars-password {
+        display: inline-block;
+        position: relative;
+        padding-right: 40px;
+        min-height: 21px;
+        vertical-align: middle;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .visible {
+        display: block;
+    }
+
+</style>
 
 <l:settingsGroup title="OverOps Query Plugin" className="overopsPlugin">
     <tr>
@@ -17,7 +36,8 @@
     <tr>
         <td class="help-overops" colspan="2">
             <div class="help-text-overops">
-                The complete url including port of the OverOps API https://api.overops.com or http://host.domain.com:8080
+                The complete url including port of the OverOps API https://api.overops.com or
+                http://host.domain.com:8080
             </div>
             <div class="help-link-overops">
                 (from <a href="https://api.overops.com">OverOps Query Plugin</a>)
@@ -27,13 +47,14 @@
     <tr>
         <th class="noBorder"><label for="envId">OverOps Environment ID: </label></th>
         <td>
-            <props:textProperty name="envId" id="envId" className="longField" />
+            <props:textProperty name="envId" id="envId" className="longField"/>
         </td>
     </tr>
     <tr>
         <td class="help-overops" colspan="2">
             <div class="help-text-overops">
-                The default OverOps environment identifier (e.g. S12345) if none specified in the build settings. Make sure the "S" is capitalized.
+                The default OverOps environment identifier (e.g. S12345) if none specified in the build settings. Make
+                sure the "S" is capitalized.
             </div>
             <div class="help-link-overops">
                 (from <a href="https://api.overops.com">OverOps Query Plugin</a>)
@@ -42,14 +63,20 @@
     </tr>
     <tr>
         <th class="noBorder"><label for="token">OverOps API Token: </label></th>
-        <td>
-            <props:textProperty id="token" name="token" className="longField" />
+        <td class="hidden-password longField">
+            <div class="stars-password">********************************************************************</div>
+            <img class="show-pass" style="margin-bottom: -4px; cursor:pointer" src="${teamcityPluginResourcesPath}img/icons8-eye-24.png" height="15"/>
+        </td>
+        <td hidden class="visible-password">
+            <props:textProperty id="token" name="token" className="longField"/>
+            <img class="hide-pass" src="${teamcityPluginResourcesPath}img/icons8-hide-24.png" height="15" style="margin-bottom: -3px; cursor:pointer;"/>
         </td>
     </tr>
     <tr>
         <td class="help-overops" colspan="2">
             <div class="help-text-overops">
-                The OverOps REST API token to use for authentication.  This can be obtained from the OverOps dashboard under Settings -> Account.
+                The OverOps REST API token to use for authentication. This can be obtained from the OverOps dashboard
+                under Settings -> Account.
             </div>
             <div class="help-link-overops">
                 (from <a href="https://api.overops.com">OverOps Query Plugin</a>)
@@ -107,15 +134,16 @@
 
     <tr>
         <th class="noBorder"><label for="checkNewErrors">
-            <props:checkboxProperty  name="checkNewErrors" className="checkBoxField commutator"/> New Error Gate: </label></th>
+            <props:checkboxProperty name="checkNewErrors" className="checkBoxField commutator"/> New Error
+            Gate: </label></th>
     </tr>
 
-        <tr class="checkNewErrors" >
-            <th class="noBorder"><label for="newEvents">Detect New Errors: </label></th>
-            <td>
-                <props:checkboxProperty name="newEvents" className="checkBoxField"/>
-            </td>
-        </tr>
+    <tr class="checkNewErrors">
+        <th class="noBorder"><label for="newEvents">Detect New Errors: </label></th>
+        <td>
+            <props:checkboxProperty name="newEvents" className="checkBoxField"/>
+        </td>
+    </tr>
 
 
     <tr>
@@ -249,6 +277,7 @@
         }
         return valid;
     }
+
     function testConnection() {
 
         var url = document.getElementById("url").value;
@@ -259,12 +288,12 @@
         if (validation(url, token, envId)) {
             BS.ajaxRequest(window['base_uri'] + '/admin/manageOverOps.html', {
                 parameters: Object.toQueryString({
-                    "testing" : true,
+                    "testing": true,
                     "overops.url": url,
                     "overops.env.id": envId,
-                    "overops.token" : token
+                    "overops.token": token
                 }),
-                onComplete: function(response) {
+                onComplete: function (response) {
                     var status = response['responseXML'].childNodes[0].getAttribute('status') === "OK";
                     var text = response['responseXML'].childNodes[0].getAttribute('message')
                     BS.TestConnectionDialog.show(status, text, $('testConnection'));
@@ -272,24 +301,43 @@
             });
         }
     }
+
     jQuery(function () {
-        jQuery('tr').find('.commutator').each(function(){
-            if(!jQuery(this).is(':checked')) {
+        jQuery('.show-pass').click(function() {
+            jQuery('.hidden-password').hide();
+            jQuery('.visible-password').show();
+        });
+        jQuery('.hide-pass').click(function() {
+            jQuery('.hidden-password').show();
+            jQuery('.visible-password').hide();
+        });
+        jQuery('tr').find('.commutator').each(function () {
+            if (!jQuery(this).is(':checked')) {
                 var id = jQuery(this).attr('id');
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(false)});
-                jQuery("."+id).find('.longField').each(function(){this.setValue("")});
-                jQuery("."+id).hide();
+                jQuery("." + id).find('.checkBoxField').each(function () {
+                    this.setValue(false)
+                });
+                jQuery("." + id).find('.longField').each(function () {
+                    this.setValue("")
+                });
+                jQuery("." + id).hide();
             }
         });
-        jQuery('.commutator').change(function(){
+        jQuery('.commutator').change(function () {
             var id = jQuery(this).attr('id');
-            if(jQuery(this).is(':checked')) {
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(true)});
-                jQuery("."+id).show();
+            if (jQuery(this).is(':checked')) {
+                jQuery("." + id).find('.checkBoxField').each(function () {
+                    this.setValue(true)
+                });
+                jQuery("." + id).show();
             } else {
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(false)});
-                jQuery("."+id).find('.longField').each(function(){this.setValue("")});
-                jQuery("."+id).hide();
+                jQuery("." + id).find('.checkBoxField').each(function () {
+                    this.setValue(false)
+                });
+                jQuery("." + id).find('.longField').each(function () {
+                    this.setValue("")
+                });
+                jQuery("." + id).hide();
             }
         });
     })
