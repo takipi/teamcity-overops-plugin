@@ -65,7 +65,7 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
             publishReportArtifact(ReportUtils.copyResult(report));
             if (unstable) {
                 logger.message(summary, Status.FAILURE);
-                return BuildFinishedStatus.FINISHED_WITH_PROBLEMS;
+                return BuildFinishedStatus.FINISHED_FAILED;
             }
             logger.message(summary, Status.NORMAL);
         } catch (InterruptedException  | IllegalStateException | IOException e) {
