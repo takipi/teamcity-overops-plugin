@@ -11,7 +11,7 @@
     .stars-password {
         display: inline-block;
         position: relative;
-        padding-right: 40px;
+        padding-right: 42px;
         min-height: 21px;
         vertical-align: middle;
     }
@@ -67,7 +67,7 @@
             <div class="stars-password">********************************************************************</div>
             <img class="show-pass" style="margin-bottom: -4px; cursor:pointer" src="${teamcityPluginResourcesPath}img/icons8-eye-24.png" height="15"/>
         </td>
-        <td hidden class="visible-password">
+        <td class="visible-password" style="display: none">
             <props:textProperty id="token" name="token" className="longField"/>
             <img class="hide-pass" src="${teamcityPluginResourcesPath}img/icons8-hide-24.png" height="15" style="margin-bottom: -3px; cursor:pointer;"/>
         </td>
