@@ -21,7 +21,16 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-.idea/*
+
+# output
 target/*
 */target/*
-*.DS_Store
+
+# IDE files
+.idea/*
+.classpath
+.settings
+.project
+
+# macos
+.DS_Store
