@@ -206,7 +206,7 @@ public class ReportUtils {
     }
 
     private static boolean getPassedRegressedEvents(ReportBuilder.QualityReport report) {
-        return !getCheckRegressedErrors(report) && report.getRegressions() != null && report.getRegressions().size() > 0;
+        return !(getCheckRegressedErrors(report) && report.getRegressions() != null && report.getRegressions().size() > 0);
     }
 
     private static List<OOReportEvent> getRegressedEvents(ReportBuilder.QualityReport report) {
