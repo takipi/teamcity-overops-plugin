@@ -120,10 +120,24 @@
   .overops-quality-report .muted {
     color: hsl(0, 0%, 60%);
   }
+
+  .table-striped {
+    border-color: #acacac;
+    border-width: 1px;
+  }
+
+  .table-summary {
+    border-collapse: collapse;
+    width: 278px;
+  }
+
+  .red-color{
+    color: #ee6557;
+  }
 </style>
 <section class="overops-quality-report">
 
-  <div class="d-flex align-center mt-3">
+  <div class="d-flex mt-3">
     <img src ="${teamcityPluginResourcesPath}img/overops-logo.svg" alt="OverOps" class="mr-2" />
     <h1>Quality Report</h1>
   </div>
@@ -163,6 +177,44 @@
     </c:otherwise>
   </c:choose>
 
+  <div class="d-flex mt-3">
+    <h2 >Report Summary</h2>
+  </div>
+
+  <div class="table-summary">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Gate</th>
+        <th>Status</th>
+        <th>Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      <c:forEach items="${result.summaryTable}" var="sr">
+        <tr>
+          <td>
+            <a href="#${sr.gateName}-table" target="_blank">${sr.gateName}</a>
+          </td>
+          <td>
+            <c:choose>
+              <c:when test="${sr.passed}">
+                <h4>${sr.gateStatus}</h4>
+              </c:when>
+              <c:otherwise>
+                <h4 class="red-color">${sr.gateStatus}</h4>
+              </c:otherwise>
+            </c:choose>
+          </td>
+          <td>${sr.total}
+          </td>
+        </tr>
+      </c:forEach>
+      </tbody>
+    </table>
+  </div>
+
+
   <c:if test="${result.checkNewEvents}">
     <c:choose>
       <c:when test="${result.passedNewErrorGate}">
@@ -177,7 +229,7 @@
           <i class="icon-danger mr-1"></i>
           <h4>${result.newErrorSummary}</h4>
         </div>
-        <table class="table table-striped">
+        <table id="New-table" class="table table-striped">
           <thead>
             <tr>
               <th>Event</th>
@@ -217,7 +269,7 @@
           <i class="icon-danger mr-1"></i>
           <h4>${result.resurfacedErrorSummary}</h4>
         </div>
-        <table class="table table-striped">
+        <table id="Resurfaced-table" class="table table-striped">
           <thead>
             <tr>
               <th>Event</th>
@@ -323,7 +375,7 @@
           <i class="icon-danger mr-1"></i>
           <h4>${result.criticalErrorSummary}</h4>
         </div>
-        <table class="table table-striped">
+        <table id="Critical-table" class="table table-striped">
           <thead>
             <tr>
               <th>Event</th>
@@ -363,7 +415,7 @@
           <i class="icon-danger mr-1"></i>
           <h4>${result.regressionSumarry}</h4>
         </div>
-        <table class="table table-striped">
+        <table id="Increasing-table" class="table table-striped">
           <thead>
             <tr>
               <th>Event</th>

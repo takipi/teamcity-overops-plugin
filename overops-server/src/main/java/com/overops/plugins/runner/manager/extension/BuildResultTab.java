@@ -1,13 +1,14 @@
 package com.overops.plugins.runner.manager.extension;
 
 import com.overops.plugins.Constants;
-
 import com.overops.plugins.Util;
 import com.overops.plugins.model.OverOpsReportModel;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.artifacts.BuildArtifact;
-import jetbrains.buildServer.web.openapi.*;
+import jetbrains.buildServer.web.openapi.PagePlaces;
+import jetbrains.buildServer.web.openapi.PluginDescriptor;
+import jetbrains.buildServer.web.openapi.ViewLogTab;
 import jetbrains.buildServer.web.reportTabs.ReportTabUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +35,8 @@ public class BuildResultTab extends ViewLogTab {
                 String result = new BufferedReader(new InputStreamReader(artifact.getInputStream()))
                         .lines().collect(Collectors.joining("\n"));
                 OverOpsReportModel report = Util.stringToObject(result, OverOpsReportModel.class);
+                report.updateSummaryTable();
+
                 model.put("result", report);
             } catch (IOException e) {
                 System.err.println(e.getMessage());

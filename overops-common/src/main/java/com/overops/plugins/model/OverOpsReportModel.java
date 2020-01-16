@@ -1,5 +1,6 @@
 package com.overops.plugins.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OverOpsReportModel {
@@ -32,6 +33,16 @@ public class OverOpsReportModel {
     private List<ReportEventModel> criticalEvents;
     private List<ReportEventModel> topEvents;
     private List<ReportEventModel> regressedEvents;
+
+    private List<OverOpsQCSummaryRow> summaryTable;
+
+    public List<OverOpsQCSummaryRow> getSummaryTable() {
+        return summaryTable;
+    }
+
+    public void setSummaryTable(List<OverOpsQCSummaryRow> summaryTable) {
+        this.summaryTable = summaryTable;
+    }
 
     public boolean isUnstable() {
         return unstable;
@@ -247,5 +258,15 @@ public class OverOpsReportModel {
 
     public void setRegressedEvents(List<ReportEventModel> regressedEvents) {
         this.regressedEvents = regressedEvents;
+    }
+
+    public void updateSummaryTable() {
+        summaryTable = new ArrayList<OverOpsQCSummaryRow>();
+        final String passedString =  "-";
+
+        summaryTable.add(new OverOpsQCSummaryRow("New", passedNewErrorGate, passedNewErrorGate ? passedString : String.valueOf(getNewEvents().size())));
+        summaryTable.add(new OverOpsQCSummaryRow("Resurfaced", passedResurfacedErrorGate, passedResurfacedErrorGate ? passedString : String.valueOf(getResurfacedEvents().size())));
+        summaryTable.add(new OverOpsQCSummaryRow("Critical", passedCriticalErrorGate, passedCriticalErrorGate ? passedString : String.valueOf(getCriticalEvents().size())));
+        summaryTable.add(new OverOpsQCSummaryRow("Increasing", passedRegressedEvents, passedRegressedEvents ? passedString : String.valueOf(getResurfacedEvents().size())));
     }
 }
