@@ -58,7 +58,7 @@
     </tr>
     <tr>
         <td class="help-button" colspan="2">
-            <a class="btn cancel" onclick="testConnection()">Test Connection</a>
+            <a class="btn cancel" onclick="BS.OOF.testConnection();">Test Connection</a>
         </td>
     </tr>
     <bs:dialog dialogId="testConnectionDialog"
@@ -224,73 +224,98 @@
     }
 </style>
 <script type="text/javascript">
-    function validation(url, token, envId) {
-        var valid = true;
-        if (token === null || token === undefined || token === "") {
-            valid = false;
-            document.getElementById("token").classList.add("errorField")
-            document.getElementById("token").focus()
-        } else {
-            document.getElementById("token").classList.remove("errorField")
-        }
-        if (envId === null || envId === undefined || envId === "") {
-            valid = false;
-            document.getElementById("envId").classList.add("errorField")
-            document.getElementById("envId").focus()
-        } else {
-            document.getElementById("envId").classList.remove("errorField")
-        }
-        if (url === null || url === undefined || url === "") {
-            valid = false;
-            document.getElementById("url").classList.add("errorField")
-            document.getElementById("url").focus()
-        } else {
-            document.getElementById("url").classList.remove("errorField")
-        }
-        return valid;
-    }
-    function testConnection() {
-
-        var url = document.getElementById("url").value;
-        var token = document.getElementById("token").value;
-        var envId = document.getElementById("envId").value;
-
-
-        if (validation(url, token, envId)) {
-            BS.ajaxRequest(window['base_uri'] + '/admin/manageOverOps.html', {
-                parameters: Object.toQueryString({
-                    "testing" : true,
-                    "overops.url": url,
-                    "overops.env.id": envId,
-                    "overops.token" : token
-                }),
-                onComplete: function(response) {
-                    var status = response['responseXML'].childNodes[0].getAttribute('status') === "OK";
-                    var text = response['responseXML'].childNodes[0].getAttribute('message')
-                    BS.TestConnectionDialog.show(status, text, $('testConnection'));
+    BS.OOF = {
+        getProjectId: function() {
+            var arr = BS.Navigation.items;
+            if (arr != null && arr.length > 2) {
+                var projectId = arr[arr.length - 2].projectId;
+                if (projectId != null) {
+                    return projectId;
                 }
-            });
+            }
+
+            return "noProjectFound";
+        },
+
+        save : function() {
+            var url = document.getElementById("url").value;
+            var token = document.getElementById("token").value;
+            var envId = document.getElementById("envId").value;
+            var projectId = this.getProjectId();
+
+            if (this.validation(url, token, envId)) {
+                BS.ajaxRequest(window['base_uri'] + '/admin/manageOverOps.html', {
+                    parameters: Object.toQueryString({
+                        "testing" : false,
+                        "overops.url": url,
+                        "overops.env.id": envId,
+                        "overops.token" : token,
+                        "projectId": projectId
+                    }),
+                    onComplete: function(response) {
+                        var classFail = "testConnectionFailed";
+                        var classOk = "testConnectionSuccess";
+                        var text = "Problem with saving settings.";
+                        if (response['responseXML'].childNodes[0].getAttribute('status') === "OK") {
+                            text = "Setting saved successfully.";
+                            jQuery("#resultDialogTitle").removeClass(classFail);
+                            jQuery("#resultDialogTitle").addClass(classOk);
+                        } else {
+                            jQuery("#resultDialogTitle").removeClass(classOk);
+                            jQuery("#resultDialogTitle").addClass(classFail);
+                        }
+                        jQuery("#resultDialogTitle").text(text);
+                        jQuery("#resultDialog").show();
+                    }
+                });
+            }
+        },
+
+        testConnection: function() {
+            var url = document.getElementById("url").value;
+            var token = document.getElementById("token").value;
+            var envId = document.getElementById("envId").value;
+            var projectId = this.getProjectId();
+
+            if (this.validation(url, token, envId)) {
+                BS.ajaxRequest(window['base_uri'] + '/admin/manageOverOps.html', {
+                    parameters: Object.toQueryString({
+                        "testing" : true,
+                        "overops.url": url,
+                        "overops.env.id": envId,
+                        "overops.token" : token,
+                        "projectId": projectId
+                    }),
+                    onComplete: function(response) {
+                        var status = response['responseXML'].childNodes[0].getAttribute('status') === "OK";
+                        var text = response['responseXML'].childNodes[0].getAttribute('message');
+                        BS.TestConnectionDialog.show(status, text, $('testConnection'));
+                    }
+                });
+            }
+        },
+
+        validation : function(url, token, envId) {
+            var valid = true;
+            if (token === null || token === undefined || token === "") {
+                valid = false;
+                document.getElementById("token").classList.add("error_setting");
+            } else {
+                document.getElementById("token").classList.remove("error_setting");
+            }
+            if (url === null || url === undefined || url === "") {
+                valid = false;
+                document.getElementById("url").classList.add("error_setting");
+            } else {
+                document.getElementById("url").classList.remove("error_setting");
+            }
+            if (envId === null || envId === undefined || envId === "") {
+                valid = false;
+                document.getElementById("envId").classList.add("error_setting");
+            } else {
+                document.getElementById("envId").classList.remove("error_setting");
+            }
+            return valid;
         }
     }
-    jQuery(function () {
-        jQuery('tr').find('.commutator').each(function(){
-            if(!jQuery(this).is(':checked')) {
-                var id = jQuery(this).attr('id');
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(false)});
-                jQuery("."+id).find('.longField').each(function(){this.setValue("")});
-                jQuery("."+id).hide();
-            }
-        });
-        jQuery('.commutator').change(function(){
-            var id = jQuery(this).attr('id');
-            if(jQuery(this).is(':checked')) {
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(true)});
-                jQuery("."+id).show();
-            } else {
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(false)});
-                jQuery("."+id).find('.longField').each(function(){this.setValue("")});
-                jQuery("."+id).hide();
-            }
-        });
-    })
 </script>
