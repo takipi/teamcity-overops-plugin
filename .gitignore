@@ -31,7 +31,6 @@ target/*
 .classpath
 .settings
 .project
-.iml
 
 # macos
 .DS_Store
