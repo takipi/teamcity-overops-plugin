@@ -33,6 +33,15 @@ public class OverOpsReportModel {
     private List<ReportEventModel> topEvents;
     private List<ReportEventModel> regressedEvents;
 
+    // UI summary table
+    private boolean hasTotal;
+    private String newGateTotal;
+    private String resurfacedGateTotal;
+    private String criticalGateTotal;
+    private String totalGateTotal;
+    private String uniqueGateTotal;
+    private String regressionGateTotal;
+
     public boolean isUnstable() {
         return unstable;
     }
@@ -248,4 +257,61 @@ public class OverOpsReportModel {
     public void setRegressedEvents(List<ReportEventModel> regressedEvents) {
         this.regressedEvents = regressedEvents;
     }
+
+    public String getNewGateTotal() {
+      return newGateTotal;
+    }
+
+    public void setNewGateTotal(String newGateTotal) {
+      this.newGateTotal = newGateTotal;
+    }
+
+    public String getResurfacedGateTotal() {
+      return resurfacedGateTotal;
+    }
+
+    public void setResurfacedGateTotal(String resurfacedGateTotal) {
+      this.resurfacedGateTotal = resurfacedGateTotal;
+    }
+
+    public String getCriticalGateTotal() {
+      return criticalGateTotal;
+    }
+
+    public void setCriticalGateTotal(String criticalGateTotal) {
+      this.criticalGateTotal = criticalGateTotal;
+    }
+
+    public String getTotalGateTotal() {
+      return totalGateTotal;
+    }
+
+    public void setTotalGateTotal(String totalGateTotal) {
+      this.totalGateTotal = totalGateTotal;
+    }
+
+    public void setUniqueGateTotal(String uniqueGateTotal) {
+      this.uniqueGateTotal = uniqueGateTotal;
+    }
+
+    public String getUniqueGateTotal() {
+      return uniqueGateTotal;
+    }
+
+    public void setRegressionGateTotal(String regressionGateTotal) {
+      this.regressionGateTotal = regressionGateTotal;
+    }
+
+    public String getRegressionGateTotal() {
+      return regressionGateTotal;
+    }
+
+    public void setHasTotal(boolean hasTotal) {
+      this.hasTotal = hasTotal;
+    }
+
+    public boolean isHasTotal() {
+      return hasTotal;
+    }
+
 }
