@@ -4,16 +4,16 @@ public class Constants {
 
     public static final String EDIT_PROPS = "editOverOpsRunParams.jsp";
     public static final String RUNNER_TYPE = "overops-plugin";
-    public static final String PLUGIN_NAME = "OverOps runner";
-    public static final String PLUGIN_DESCRIPTION = "OverOps description";
+    public static final String PLUGIN_NAME = "OverOps";
+    public static final String PLUGIN_DESCRIPTION = "Generate OverOps Quality Report";
 
-    public static final String GENERAL_SETTING_TAB_TITLE = "OverOps Setting";
+    public static final String GENERAL_SETTING_TAB_TITLE = "OverOps Settings";
 
     public static final String SETTING_URL = "url";
     public static final String SETTING_ENV_ID = "envId";
     public static final String SETTING_TOKEN = "token";
 
-    public static final String OVER_OPS_MANAGER_KEY = "team_city_over_ops";
+    public static final String OVER_OPS_MANAGER_KEY = "overops";
 
     public static final String APP_NAME = "applicationName";
     public static final String DEPLOYMENT_NAME = "deploymentName";

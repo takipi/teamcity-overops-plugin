@@ -7,67 +7,53 @@
 
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
-<l:settingsGroup title="OverOps Query Plugin" className="overopsPlugin">
-    <tr>
-        <th class="noBorder"><label for="url">OverOpsURL: </label></th>
-        <td>
-            <props:textProperty id="url" name="url" className="longField"/>
-        </td>
-    </tr>
-    <tr>
-        <td class="help-overops" colspan="2">
-            <div class="help-text-overops">
-                The complete url including port of the OverOps API https://api.overops.com or http://host.domain.com:8080
-            </div>
-            <div class="help-link-overops">
-                (from <a href="https://api.overops.com">OverOps Query Plugin</a>)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <th class="noBorder"><label for="envId">OverOps Environment ID: </label></th>
-        <td>
-            <props:textProperty name="envId" id="envId" className="longField" />
-        </td>
-    </tr>
-    <tr>
-        <td class="help-overops" colspan="2">
-            <div class="help-text-overops">
-                The default OverOps environment identifier (e.g. S12345) if none specified in the build settings. Make sure the "S" is capitalized.
-            </div>
-            <div class="help-link-overops">
-                (from <a href="https://api.overops.com">OverOps Query Plugin</a>)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <th class="noBorder"><label for="token">OverOps API Token: </label></th>
-        <td>
-            <props:textProperty id="token" name="token" className="longField" />
-        </td>
-    </tr>
-    <tr>
-        <td class="help-overops" colspan="2">
-            <div class="help-text-overops">
-                The OverOps REST API token to use for authentication.  This can be obtained from the OverOps dashboard under Settings -> Account.
-            </div>
-            <div class="help-link-overops">
-                (from <a href="https://api.overops.com">OverOps Query Plugin</a>)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td class="help-button" colspan="2">
-            <button type="button" class="btn" id="test-connection">Test Connection</button>
-        </td>
-    </tr>
-    <bs:dialog dialogId="testConnectionDialog"
-               title="Test Connection"
-               closeCommand="BS.TestConnectionDialog.close();"
-               closeAttrs="showdiscardchangesmessage='false'">
+<l:settingsGroup title="OverOps API Settings" className="overopsPlugin">
+  <tr>
+    <th class="noBorder">
+      <label for="url">API URL:</label>
+    </th>
+    <td>
+      <props:textProperty id="url" name="url" className="longField" />
+      <span class="smallNote">
+        The complete URL of the OverOps API including protocal and port (https://api.overops.com or http://host.domain.com:8080)
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <th class="noBorder">
+      <label for="envId">Environment ID:</label>
+    </th>
+    <td>
+      <props:textProperty name="envId" id="envId" className="longField" />
+      <span class="smallNote">
+        The OverOps environment identifier (e.g. S12345)
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <th class="noBorder">
+      <label for="token">API Token:</label>
+    </th>
+    <td>
+      <props:textProperty id="token" name="token" className="longField" />
+      <span class="smallNote">
+        The OverOps REST API token to use for authentication. This can be obtained from the OverOps dashboard under Settings -> Account.
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <th class="noBorder"></th>
+    <td>
+      <button type="button" class="btn" id="test-connection">Test Connection</button>
+      <bs:dialog dialogId="testConnectionDialog"
+        title="Test Connection"
+        closeCommand="BS.TestConnectionDialog.close();"
+        closeAttrs="showdiscardchangesmessage='false'">
         <div id="testConnectionStatus">Connection successful!</div>
         <div id="testConnectionDetails" class="mono">Test completed successfully</div>
-    </bs:dialog>
+      </bs:dialog>
+    </td>
+  </tr>
 </l:settingsGroup>
 
 <l:settingsGroup title="General Settings" className="generalSettings">
@@ -103,7 +89,7 @@
     </tr>
 </l:settingsGroup>
 
-<l:settingsGroup title="Code Quality Gate Options" className="codeQualityOptions">
+<l:settingsGroup title="Quality Gate Settings" className="codeQualityOptions">
 
     <tr>
         <th class="noBorder"><label for="checkNewErrors">
@@ -210,7 +196,7 @@
         </td>
     </tr>
 </l:settingsGroup>
-<l:settingsGroup title="Debugging Options" className="codeQualityOptions">
+<l:settingsGroup title="Advanced Settings" className="codeQualityOptions">
     <tr>
         <th class="noBorder"><label for="debug">Debug Mode: </label></th>
         <td>
