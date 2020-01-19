@@ -1,10 +1,8 @@
-# OverOps Reliability Report - TeamCity Plugin
+# OverOps Quality Report - TeamCity Plugin
 
 This plugin provides a mechanism for applying OverOps severity assignment and regression analysis to new builds to allow application owners, DevOps engineers, and SREs to determine the quality of their code before promoting it into production.
 
 Run this plugin as a post build step after all other testing is complete to generate a Reliability Report that will determine the stability of the build. From the Reliability Report you can drill down into each specific error using the OverOps Automated Root Cause analysis screen to solve the issue.
-
-For more information about the plugin, quality gates, and for regression testing examples, see the TeamCity Plugin Guide.
 
 ![OverOps Reliability Report](readme_images/teamcity_pr.png)
 
@@ -24,17 +22,17 @@ Install the OverOps Query Plugins List through the Adminstration Page. From the 
 After installing the OverOps Plugin, configure it to connect to OverOps.
 From the TeamCity homepage select your project → Edit Project Settings → select Build Configuration → Build Step → Add Build Step → Select OverOps Runner from the Runner type drop down.
 
-## OverOps URL
+## API URL
 
 The complete URL of the OverOps API, including port. `https://api.overops.com` for SaaS or `http://host.domain.com:8080` for OnPrem setup
 
-## OverOps Environment ID
+## Environment ID
 
-The default OverOps environment identifier (e.g. S12345) if none is specified in the build settings. Make sure the "S" is capitalized.
+The default OverOps environment identifier (e.g. S12345)
 
-## OverOps API Token
+## API Token
 
-The OverOps REST API token to use for authentication. This can be obtained from the OverOps dashboard under Settings → Account.
+The OverOps REST API token to use for authentication. This can be obtained from the OverOps dashboard under Settings → Account
 
 ![Extra Configurations](readme_images/teamcity_extra_config.png)
 
