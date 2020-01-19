@@ -4,7 +4,6 @@
 <%--@elvariable id="result" type="com.overops.plugins.model.OverOpsReportModel"--%>
 <style>
   .overops-quality-report a {
-    color: #333;
     text-decoration: none;
   }
   .overops-quality-report a:hover {
@@ -13,6 +12,10 @@
   .overops-quality-report h1 {
     margin: 0;
     font-size: 22px;
+  }
+  .overops-quality-report h3 {
+    margin: 0 0 0.5em;
+    font-size: 16px;
   }
   .overops-quality-report h4 {
     margin: 0;
@@ -50,6 +53,12 @@
   .overops-quality-report .mt-4 {
     margin-top: 40px;
   }
+  .overops-quality-report .mb-5 {
+    margin-bottom: 64px;
+  }
+  .overops-quality-report .w-25 {
+    width: 25%!important;
+  }
   .overops-quality-report .alert {
     margin: 32px 0;
     padding: 8px 0;
@@ -84,6 +93,14 @@
     width: 48px;
     background-size: 48px 48px;
   }
+  .overops-quality-report .icon-td {
+    height: 20px;
+    width: 20px;
+    background-size: 20px 20px;
+    margin-top: -5px;
+    margin-bottom: -5px;
+    margin-left: -10px;
+  }
   .overops-quality-report .icon-success {
     background-image: url("${teamcityPluginResourcesPath}img/icon-success.svg");
   }
@@ -92,6 +109,9 @@
   }
   .overops-quality-report .icon-danger {
     background-image: url("${teamcityPluginResourcesPath}img/icon-danger.svg");
+  }
+  .overops-quality-report .icon-times {
+    background-image: url("${teamcityPluginResourcesPath}img/icon-times.svg");
   }
   .overops-quality-report .table {
     border-collapse: collapse;
@@ -163,19 +183,204 @@
     </c:otherwise>
   </c:choose>
 
+
+  <h3>Report Summary</h3>
+  <table class="table table-striped w-25 mb-5">
+    <thead>
+      <tr>
+        <th>Gate</th>
+        <th>Status</th>
+        <c:if test="${result.hasTotal}">
+          <th>Errors</th>
+        </c:if>
+      </tr>
+    </thead>
+    <tbody>
+      <c:if test="${result.checkNewEvents}">
+        <c:choose>
+          <c:when test="${result.passedNewErrorGate}">
+            <tr>
+              <td>
+                <i class="icon-success icon-td"></i>
+                <a href="#new-gate">New</a>
+              </td>
+              <td>Passed</td>
+              <c:if test="${result.hasTotal}">
+                <td>&ndash;</td>
+              </c:if>
+            </tr>
+          </c:when>
+          <c:otherwise>
+            <tr>
+              <td>
+                <i class="icon-times icon-td"></i>
+                <a href="#new-gate">New</a>
+              </td>
+              <td>Failed</td>
+              <c:if test="${result.hasTotal}">
+                <td>${result.newGateTotal}</td>
+              </c:if>
+            </tr>
+          </c:otherwise>
+        </c:choose>
+      </c:if>
+      <c:if test="${result.checkResurfacedEvents}">
+        <c:choose>
+          <c:when test="${result.passedResurfacedErrorGate}">
+            <tr>
+              <td>
+                <i class="icon-success icon-td"></i>
+                <a href="#resurfaced-gate">Resurfaced</a>
+              </td>
+              <td>Passed</td>
+              <c:if test="${result.hasTotal}">
+                <td>&ndash;</td>
+              </c:if>
+            </tr>
+          </c:when>
+          <c:otherwise>
+            <tr>
+              <td>
+                <i class="icon-times icon-td"></i>
+                <a href="#resurfaced-gate">Resurfaced</a>
+              </td>
+              <td>Failed</td>
+              <c:if test="${result.hasTotal}">
+                <td>${result.resurfacedGateTotal}</td>
+              </c:if>
+            </tr>
+          </c:otherwise>
+        </c:choose>
+      </c:if>
+      <c:if test="${result.checkTotalErrors}">
+        <c:choose>
+          <c:when test="${result.passedTotalErrorGate}">
+            <tr>
+              <td>
+                <i class="icon-success icon-td"></i>
+                <a href="#total-gate">Total</a>
+              </td>
+              <td>Passed</td>
+              <c:if test="${result.hasTotal}">
+                <td>&ndash;</td>
+              </c:if>
+            </tr>
+          </c:when>
+          <c:otherwise>
+            <tr>
+              <td>
+                <i class="icon-times icon-td"></i>
+                <a href="#total-gate">Total</a>
+              </td>
+              <td>Failed</td>
+              <c:if test="${result.hasTotal}">
+                <td>${result.totalGateTotal}</td>
+              </c:if>
+            </tr>
+          </c:otherwise>
+        </c:choose>
+      </c:if>
+      <c:if test="${result.checkUniqueErrors}">
+        <c:choose>
+          <c:when test="${result.passedUniqueErrorGate}">
+            <tr>
+              <td>
+                <i class="icon-success icon-td"></i>
+                <a href="#unique-gate">Unique</a>
+              </td>
+              <td>Passed</td>
+              <c:if test="${result.hasTotal}">
+                <td>&ndash;</td>
+              </c:if>
+            </tr>
+          </c:when>
+          <c:otherwise>
+            <tr>
+              <td>
+                <i class="icon-times icon-td"></i>
+                <a href="#unique-gate">Unique</a>
+              </td>
+              <td>Failed</td>
+              <c:if test="${result.hasTotal}">
+                <td>${result.uniqueGateTotal}</td>
+              </c:if>
+            </tr>
+          </c:otherwise>
+        </c:choose>
+      </c:if>
+      <c:if test="${result.checkCriticalErrors}">
+        <c:choose>
+          <c:when test="${result.passedCriticalErrorGate}">
+            <tr>
+              <td>
+                <i class="icon-success icon-td"></i>
+                <a href="#critical-gate">Critical</a>
+              </td>
+              <td>Passed</td>
+              <c:if test="${result.hasTotal}">
+                <td>&ndash;</td>
+              </c:if>
+            </tr>
+          </c:when>
+          <c:otherwise>
+            <tr>
+              <td>
+                <i class="icon-times icon-td"></i>
+                <a href="#critical-gate">Critical</a>
+              </td>
+              <td>Failed</td>
+              <c:if test="${result.hasTotal}">
+                <td>${result.criticalGateTotal}</td>
+              </c:if>
+            </tr>
+          </c:otherwise>
+        </c:choose>
+      </c:if>
+      <c:if test="${result.checkRegressedErrors}">
+        <c:choose>
+          <c:when test="${result.passedRegressedEvents}">
+            <tr>
+              <td>
+                <i class="icon-success icon-td"></i>
+                <a href="#increasing-gate">Increasing</a>
+              </td>
+              <td>Passed</td>
+              <c:if test="${result.hasTotal}">
+                <td>&ndash;</td>
+              </c:if>
+            </tr>
+          </c:when>
+          <c:otherwise>
+            <tr>
+              <td>
+                <i class="icon-times icon-td"></i>
+                <a href="#increasing-gate">Increasing</a>
+              </td>
+              <td>Failed</td>
+              <c:if test="${result.hasTotal}">
+                <td>${result.regressionGateTotal}</td>
+              </c:if>
+            </tr>
+          </c:otherwise>
+        </c:choose>
+      </c:if>
+
+    </tbody>
+  </table>
+
   <c:if test="${result.checkNewEvents}">
     <c:choose>
       <c:when test="${result.passedNewErrorGate}">
         <div class="d-flex align-center mt-4">
           <i class="icon-success mr-1"></i>
-          <h4>${result.newErrorSummary}</h4>
+          <h4 id="new-gate">${result.newErrorSummary}</h4>
         </div>
         <p class="ml-2 muted">Nothing to report</p>
       </c:when>
       <c:otherwise>
         <div class="d-flex align-center mb-2 mt-4">
           <i class="icon-danger mr-1"></i>
-          <h4>${result.newErrorSummary}</h4>
+          <h4 id="new-gate">${result.newErrorSummary}</h4>
         </div>
         <table class="table table-striped">
           <thead>
@@ -208,14 +413,14 @@
       <c:when test="${result.passedResurfacedErrorGate}">
         <div class="d-flex align-center mt-4">
           <i class="icon-success mr-1"></i>
-          <h4>${result.resurfacedErrorSummary}</h4>
+          <h4 id="resurfaced-gate">${result.resurfacedErrorSummary}</h4>
         </div>
         <p class="ml-2 muted">Nothing to report</p>
       </c:when>
       <c:otherwise>
         <div class="d-flex align-center mb-2 mt-4">
           <i class="icon-danger mr-1"></i>
-          <h4>${result.resurfacedErrorSummary}</h4>
+          <h4 id="resurfaced-gate">${result.resurfacedErrorSummary}</h4>
         </div>
         <table class="table table-striped">
           <thead>
@@ -249,13 +454,13 @@
         <c:when test="${result.passedTotalErrorGate}">
           <div class="d-flex align-center mt-4 mb-2">
             <i class="icon-success mr-1"></i>
-            <h4>${result.totalErrorSummary}</h4>
+            <h4 id="total-gate">${result.totalErrorSummary}</h4>
           </div>
         </c:when>
         <c:otherwise>
           <div class="d-flex align-center mt-4 mb-2">
             <i class="icon-danger mr-1"></i>
-            <h4>${result.totalErrorSummary}</h4>
+            <h4 id="total-gate">${result.totalErrorSummary}</h4>
           </div>
         </c:otherwise>
       </c:choose>
@@ -266,13 +471,13 @@
         <c:when test="${result.passedUniqueErrorGate}">
           <div class="d-flex align-center mt-4 mb-2">
             <i class="icon-success mr-1"></i>
-            <h4>${result.uniqueErrorSummary}</h4>
+            <h4 id="unique-gate">${result.uniqueErrorSummary}</h4>
           </div>
         </c:when>
         <c:otherwise>
           <div class="d-flex align-center mt-4 mb-2">
             <i class="icon-danger mr-1"></i>
-            <h4>${result.uniqueErrorSummary}</h4>
+            <h4 id="unique-gate">${result.uniqueErrorSummary}</h4>
           </div>
         </c:otherwise>
       </c:choose>
@@ -314,14 +519,14 @@
       <c:when test="${result.passedCriticalErrorGate}">
         <div class="d-flex align-center mt-4">
           <i class="icon-success mr-1"></i>
-          <h4>${result.criticalErrorSummary}</h4>
+          <h4 id="critical-gate">${result.criticalErrorSummary}</h4>
         </div>
         <p class="ml-2 muted">Nothing to report</p>
       </c:when>
       <c:otherwise>
         <div class="d-flex align-center mb-2 mt-4">
           <i class="icon-danger mr-1"></i>
-          <h4>${result.criticalErrorSummary}</h4>
+          <h4 id="critical-gate">${result.criticalErrorSummary}</h4>
         </div>
         <table class="table table-striped">
           <thead>
@@ -354,14 +559,14 @@
       <c:when test="${result.passedRegressedEvents}">
         <div class="d-flex align-center mt-4">
           <i class="icon-success mr-1"></i>
-          <h4>${result.regressionSumarry}</h4>
+          <h4 id="increasing-gate">${result.regressionSumarry}</h4>
         </div>
         <p class="ml-2 muted">Nothing to report</p>
       </c:when>
       <c:otherwise>
         <div class="d-flex align-center mb-2 mt-4">
           <i class="icon-danger mr-1"></i>
-          <h4>${result.regressionSumarry}</h4>
+          <h4 id="increasing-gate">${result.regressionSumarry}</h4>
         </div>
         <table class="table table-striped">
           <thead>

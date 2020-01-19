@@ -101,6 +101,34 @@ public class OverOpsRunType extends RunType {
     @NotNull
     @Override
     public String describeParameters(@NotNull Map<String, String> parameters) {
-        return "Configuration build steps placeholder";
-    }
+        // LinkedHashMap preserves insertion order
+        Map<String,String> qualityGates = new LinkedHashMap<String,String>();
+
+        qualityGates.put("New", parameters.get(Constants.FIELD_NEW_EVENTS));
+        qualityGates.put("Resurfaced", parameters.get(Constants.FIELD_RESURFACED_ERRORS));
+        qualityGates.put("Total", parameters.get(Constants.FIELD_VOLUME_ERRORS));
+        qualityGates.put("Unique", parameters.get(Constants.FIELD_UNIQUE_ERRORS));
+        qualityGates.put("Critical", parameters.get(Constants.FIELD_CRITICAL_ERRORS));
+        qualityGates.put("Increasing", parameters.get(Constants.FIELD_REGRESSIONS_ERROR));
+
+        StringBuilder sb = new StringBuilder("Quality Gates: ");
+        String separator = ", ";
+
+        qualityGates.forEach((k,v) -> {
+          if(!StringUtils.isEmpty(v) && v.equals("true")) {
+            sb.append(k);
+            sb.append(separator);
+          }
+        });
+
+        if (!sb.substring(sb.length() - 2, sb.length()).equals(separator)) {
+          // no gates enabled
+          sb.append("None");
+        } else {
+          // remove trailing separator
+          sb.replace(sb.length() - 2, sb.length(), "");
+        }
+
+        return sb.toString();
+      }
 }
