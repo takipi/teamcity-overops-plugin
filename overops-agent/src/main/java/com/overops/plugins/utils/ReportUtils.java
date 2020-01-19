@@ -42,6 +42,17 @@ public class ReportUtils {
         result.setCheckRegressedErrors(getCheckRegressedErrors(report));
         result.setPassedRegressedEvents(getPassedRegressedEvents(report));
         result.setRegressedEvents(getRegressedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
+
+        result.setNewGateTotal(String.format("%,d", report.getNewIssues().size()));
+        result.setResurfacedGateTotal(String.format("%,d", report.getResurfacedErrors().size()));
+        result.setCriticalGateTotal(String.format("%,d", report.getCriticalErrors().size()));
+        result.setTotalGateTotal(String.format("%,d", report.getEventVolume()));
+        result.setUniqueGateTotal(String.format("%,d", report.getUniqueEventsCount()));
+        result.setRegressionGateTotal(String.format("%,d", report.getRegressions() != null ? report.getRegressions().size() : 0));
+
+        // hide "total" column in summary table on old reports which don't have this data saved
+        result.setHasTotal(true);
+
         return result;
     }
 
@@ -54,7 +65,7 @@ public class ReportUtils {
     private static String getSummary(ReportBuilder.QualityReport report) {
         if (report.getUnstable() && report.isMarkedUnstable()) {
             //the build is unstable when marking the build as unstable
-            return "OverOps has marked build " + getDeploymentName(report) + "  as unstable because the below quality gate(s) were not met.";
+            return "OverOps has marked build " + getDeploymentName(report) + " as unstable.";
         } else if (!report.isMarkedUnstable() && report.getUnstable()) {
             //unstable build stable when NOT marking the build as unstable
             return "OverOps has detected issues with build " + getDeploymentName(report) + "  but did not mark the build as unstable.";
@@ -74,7 +85,15 @@ public class ReportUtils {
 
     private static String getNewErrorSummary(ReportBuilder.QualityReport report) {
         if (getNewEvents(report).size() > 0) {
-            return "New Error Gate: Failed, OverOps detected " + report.getNewIssues().size() + " new error(s) in your build.";
+            int count = report.getNewIssues().size();
+            StringBuilder sb = new StringBuilder("New Error Gate: Failed, OverOps detected ");
+            sb.append(count);
+            sb.append(" new error");
+            if (count != 1) {
+              sb.append("s");
+            }
+            sb.append(" in your build.");
+            return sb.toString();
         } else if (report.isCheckNewGate()) {
             return "New Error Gate: Passed, OverOps did not detect any new errors in your build.";
         }
