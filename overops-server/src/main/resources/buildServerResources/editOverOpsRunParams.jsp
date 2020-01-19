@@ -58,7 +58,7 @@
     </tr>
     <tr>
         <td class="help-button" colspan="2">
-            <a class="btn cancel" onclick="testConnection()">Test Connection</a>
+            <button type="button" class="btn" id="test-connection">Test Connection</button>
         </td>
     </tr>
     <bs:dialog dialogId="testConnectionDialog"
@@ -219,11 +219,15 @@
     </tr>
 </l:settingsGroup>
 <style>
-    .error_setting {
-        border: 2px solid red !important;
-    }
+  input.errorField { border: 2px solid #c22731; }
 </style>
 <script type="text/javascript">
+  (() => {
+    document.getElementById('test-connection').addEventListener('click', (event) => {
+      testConnection();
+    });
+  })();
+
     function validation(url, token, envId) {
         var valid = true;
         if (token === null || token === undefined || token === "") {
