@@ -206,7 +206,7 @@
               </td>
               <td>Passed</td>
               <c:if test="${result.hasTotal}">
-                <td>&ndash;</td>
+                <td>${result.newGateTotal}</td>
               </c:if>
             </tr>
           </c:when>
@@ -234,7 +234,7 @@
               </td>
               <td>Passed</td>
               <c:if test="${result.hasTotal}">
-                <td>&ndash;</td>
+                <td>${result.resurfacedGateTotal}</td>
               </c:if>
             </tr>
           </c:when>
@@ -262,7 +262,7 @@
               </td>
               <td>Passed</td>
               <c:if test="${result.hasTotal}">
-                <td>&ndash;</td>
+                <td>${result.totalGateTotal}</td>
               </c:if>
             </tr>
           </c:when>
@@ -290,7 +290,7 @@
               </td>
               <td>Passed</td>
               <c:if test="${result.hasTotal}">
-                <td>&ndash;</td>
+                <td>${result.uniqueGateTotal}</td>
               </c:if>
             </tr>
           </c:when>
@@ -318,7 +318,7 @@
               </td>
               <td>Passed</td>
               <c:if test="${result.hasTotal}">
-                <td>&ndash;</td>
+                <td>${result.criticalGateTotal}</td>
               </c:if>
             </tr>
           </c:when>
@@ -346,7 +346,7 @@
               </td>
               <td>Passed</td>
               <c:if test="${result.hasTotal}">
-                <td>&ndash;</td>
+                <td>${result.regressionGateTotal}</td>
               </c:if>
             </tr>
           </c:when>

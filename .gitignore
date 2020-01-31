@@ -32,6 +32,7 @@ target/*
 .settings
 .project
 .iml
+.vscode/
 
 # macos
 .DS_Store
