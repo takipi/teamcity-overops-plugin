@@ -161,10 +161,6 @@ public class ReportUtils {
         return Optional.ofNullable(report.getCriticalErrors()).orElse(new ArrayList<>());
     }
 
-    private static boolean getCountGates(ReportBuilder.QualityReport report) {
-        return getCheckUniqueErrors(report) || getCheckTotalErrors(report);
-    }
-
     private static boolean getCheckTotalErrors(ReportBuilder.QualityReport report) {
         return report.isCheckVolumeGate();
     }
