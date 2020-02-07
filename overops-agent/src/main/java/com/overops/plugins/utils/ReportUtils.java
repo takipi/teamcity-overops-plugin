@@ -43,9 +43,9 @@ public class ReportUtils {
         result.setPassedRegressedEvents(getPassedRegressedEvents(report));
         result.setRegressedEvents(getRegressedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
 
-        result.setNewGateTotal(String.format("%,d", report.getNewIssues().size()));
-        result.setResurfacedGateTotal(String.format("%,d", report.getResurfacedErrors().size()));
-        result.setCriticalGateTotal(String.format("%,d", report.getCriticalErrors().size()));
+        result.setNewGateTotal(String.format("%,d", report.getNewIssues() != null ? report.getNewIssues().size() : 0));
+        result.setResurfacedGateTotal(String.format("%,d", report.getResurfacedErrors() != null ? report.getResurfacedErrors().size() : 0));
+        result.setCriticalGateTotal(String.format("%,d", report.getCriticalErrors() != null ? report.getCriticalErrors().size() : 0));
         result.setTotalGateTotal(String.format("%,d", report.getEventVolume()));
         result.setUniqueGateTotal(String.format("%,d", report.getUniqueEventsCount()));
         result.setRegressionGateTotal(String.format("%,d", report.getRegressions() != null ? report.getRegressions().size() : 0));
