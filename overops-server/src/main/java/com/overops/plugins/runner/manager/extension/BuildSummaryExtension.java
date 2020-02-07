@@ -49,7 +49,6 @@ public class BuildSummaryExtension extends SimplePageExtension {
             .ifPresent(artifact -> {
                 try {
                     Util.streamToObject(artifact.getInputStream(), Result.class).ifPresent(result -> {
-                        model.put("report", result.isReport());
                         model.put("unstable", result.isUnstable());
                     });
                     model.put("overOpsMsg", "There is no report for this build");
