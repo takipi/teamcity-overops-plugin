@@ -62,7 +62,7 @@ public class OverOpsServiceImpl implements OverOpsService {
 
     }
 
-    //sleep for 60 seconds to ensure all data is in OverOps
+    //sleep to ensure all data is in OverOps
     private static void pauseForTheCause(PrintStream printStream) {
         if (Objects.nonNull(printStream)) {
             printStream.println("Build Step: Starting OverOps Quality Gate....");
