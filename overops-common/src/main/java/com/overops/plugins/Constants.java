@@ -67,6 +67,6 @@ public class Constants {
     public static final String DEFAULT_DEBUG = "false";
 
     public static final String RUNNER_DISPLAY_NAME = "OverOps";
-    public static final String OV_REPORTS_FILE = "OverOpsReport";
-    public static final String OV_REPORTS_FILE_RESULT = "OverOpsReportResult";
+    public static final String OV_REPORTS_FILE = "OverOpsReport.json";
+    public static final String OV_REPORTS_FILE_RESULT = "OverOpsReportResult.json";
 }
