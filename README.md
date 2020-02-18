@@ -22,6 +22,8 @@ Install the OverOps Query Plugins List through the Adminstration Page. From the 
 After installing the OverOps Plugin, configure it to connect to OverOps.
 From the TeamCity homepage select your project → Edit Project Settings → select Build Configuration → Build Step → Add Build Step → Select OverOps from the Runner type drop down.
 
+![Extra Configurations](readme_images/teamcity_extra_config.png)
+
 ### API URL
 
 The complete URL of the OverOps API, including port. `https://api.overops.com` for SaaS or `http://host.domain.com:8080` for an on prem setup
@@ -33,8 +35,6 @@ The OverOps environment identifier (e.g. S12345)
 ### API Token
 
 The OverOps REST API token to use for authentication. This can be obtained from the OverOps dashboard under Settings → Account
-
-![Extra Configurations](readme_images/teamcity_extra_config.png)
 
 ### Application Name
 
