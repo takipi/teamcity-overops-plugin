@@ -23,7 +23,9 @@ public class QueryOverOps {
     private Double criticalRegressionDelta = 0d;
     private boolean applySeasonality = false;
 
+    // advanced settings
     private boolean debug = false;
+    private boolean errorSuccess = false;
 
     public String getApplicationName() {
         return applicationName;
@@ -185,6 +187,14 @@ public class QueryOverOps {
         this.debug = debug;
     }
 
+    public boolean isErrorSuccess() {
+        return errorSuccess;
+    }
+
+    public void setErrorSuccess(boolean errorSuccess) {
+      this.errorSuccess = errorSuccess;
+    }
+
     public static QueryOverOps mapToObject(Map<String, String> params) {
         QueryOverOps queryOverOps = new QueryOverOps();
         queryOverOps.applicationName = params.get("applicationName");
@@ -219,6 +229,7 @@ public class QueryOverOps {
             queryOverOps.applySeasonality = Boolean.parseBoolean(params.getOrDefault("applySeasonality", "false"));
         }
         queryOverOps.debug = Boolean.parseBoolean(params.getOrDefault("debug", "false"));
+        queryOverOps.errorSuccess = Boolean.parseBoolean(params.getOrDefault("errorSuccess", "false"));
         return queryOverOps;
     }
 
@@ -244,6 +255,7 @@ public class QueryOverOps {
                 ", criticalRegressionDelta=" + criticalRegressionDelta +
                 ", applySeasonality=" + applySeasonality +
                 ", debug=" + debug +
+                ", errorSuccess=" + errorSuccess +
                 '}';
     }
 }

@@ -1,5 +1,10 @@
 package com.overops.plugins.model;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class OverOpsReportModel {
@@ -41,6 +46,13 @@ public class OverOpsReportModel {
     private String totalGateTotal;
     private String uniqueGateTotal;
     private String regressionGateTotal;
+
+    // handle exceptions in the UI
+    private Exception exception;
+    private boolean hasException;
+    private String exceptionMessage;
+    private String stackTrace;
+    private String emailMessage;
 
     public boolean isUnstable() {
         return unstable;
@@ -314,4 +326,48 @@ public class OverOpsReportModel {
       return hasTotal;
     }
 
+    public void setException(Exception exception) {
+      this.exception = exception;
+      hasException = exception != null;
+
+      if (hasException) {
+        exceptionMessage = exception != null ? exception.getMessage(): "";
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        stackTrace = sw.toString();
+
+        StringBuilder messageBuilder = new StringBuilder("subject=TeamCity%20CI%2FCD%20plugin%20error");
+        try {
+          messageBuilder.append("&body=");
+          messageBuilder.append(URLEncoder.encode(exceptionMessage + "\n\n" + stackTrace, StandardCharsets.UTF_8.toString()));
+        } catch (UnsupportedEncodingException ex) {
+          // unable to encode email body
+        }
+
+        emailMessage = messageBuilder.toString();
+      }
+
+    }
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public boolean isHasException() {
+      return hasException;
+    }
+
+    public String getExceptionMessage() {
+      return exceptionMessage;
+    }
+
+    public String getStackTrace() {
+      return stackTrace;
+    }
+
+    public String getEmailMessage() {
+      return emailMessage;
+    }
 }

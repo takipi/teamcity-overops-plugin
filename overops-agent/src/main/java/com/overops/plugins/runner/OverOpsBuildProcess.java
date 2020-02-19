@@ -52,7 +52,6 @@ public class OverOpsBuildProcess implements BuildProcess {
         }
     }
 
-    @SuppressWarnings("static-access")
     @Override
     public BuildFinishedStatus waitFor() throws RunBuildException {
         try {
