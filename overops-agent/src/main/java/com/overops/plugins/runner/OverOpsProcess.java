@@ -8,20 +8,17 @@ import com.overops.plugins.model.Setting;
 import com.overops.plugins.service.OverOpsService;
 import com.overops.plugins.service.impl.ReportBuilder;
 import com.overops.plugins.utils.ReportUtils;
-import com.takipi.api.client.util.cicd.OOReportEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.concurrent.Callable;
 import jetbrains.buildServer.agent.AgentRunningBuild;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
-import jetbrains.buildServer.messages.Status;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,26 +52,33 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
 
         Setting setting = new Setting(context.getRunnerParameters().get(SETTING_URL),
             context.getRunnerParameters().get(SETTING_ENV_ID), context.getRunnerParameters().get(SETTING_TOKEN));
+
         QueryOverOps params = QueryOverOps.mapToObject(context.getRunnerParameters());
         params.setServiceId(setting.getOverOpsSID());
+
+        OverOpsReportModel reportModel = null;
+
         try {
             ReportBuilder.QualityReport report = overOpsService.perform(setting, params, logger);
-            boolean unstable = report.isMarkedUnstable() && report.getUnstable();
-            String summary = getSummary(report);
-            publishArtifacts(unstable);
-            publishReportArtifact(ReportUtils.copyResult(report));
-            if (unstable) {
-                logger.message(summary, Status.FAILURE);
+            reportModel = ReportUtils.copyResult(report);
+        } catch (Exception exception) {
+            reportModel = ReportUtils.exceptionResult(exception);
+            logger.error("OverOps encountered an exception");
+        }
+
+        publishReportArtifact(reportModel);
+
+        logger.message(reportModel.getSummary());
+
+        if (reportModel.getException() != null) {
+            return params.isErrorSuccess() ? BuildFinishedStatus.FINISHED_SUCCESS : BuildFinishedStatus.INTERRUPTED;
+        } else {
+            publishArtifacts(reportModel.isUnstable());
+            if (reportModel.isUnstable() && reportModel.isMarkedUnstable()) {
                 return BuildFinishedStatus.FINISHED_FAILED;
             }
-            logger.message(summary, Status.NORMAL);
-        } catch (InterruptedException  | IllegalStateException | IOException e) {
-            logger.error("Failed to start OverOps test: " + e.getMessage());
-            return BuildFinishedStatus.INTERRUPTED;
-        } catch (Exception e) {
-            logger.error("Caught exception: " + e.toString() + "\n " + Arrays.toString(e.getStackTrace()));
-            return BuildFinishedStatus.FINISHED_FAILED;
         }
+
         return BuildFinishedStatus.FINISHED_SUCCESS;
     }
 
@@ -85,7 +89,7 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
         File file = new File(buildDirectory, OV_REPORTS_FILE);
         try {
             FileUtils.touch(file);
-            Result result = new Result(false, markUnstable);
+            Result result = new Result(markUnstable);
             Util.objectToString(result).ifPresent(o -> appendStringToFile(file, o));
         } catch (IOException e) {
             logger.error("Cannot create artifact: " + e.getMessage());
@@ -114,19 +118,5 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
             logger.error("Cannot write line into artifact: " + e.getMessage());
         }
     }
-
-    private String getSummary(ReportBuilder.QualityReport report) {
-        if (report.getUnstable() && report.isMarkedUnstable()) {
-            //the build is unstable when marking the build as unstable
-            return "OverOps has marked build "+ report.getDeploymentName() + "  as unstable because the below quality gate(s) were not met.";
-        } else if (!report.isMarkedUnstable() && report.getUnstable()) {
-            //unstable build stable when NOT marking the build as unstable
-            return "OverOps has detected issues with build "+ report.getDeploymentName() + "  but did not mark the build as unstable.";
-        } else {
-            //stable build when marking the build as unstable
-            return "Congratulations, build " + report.getDeploymentName() + " has passed all quality gates!";
-        }
-    }
-
 
 }

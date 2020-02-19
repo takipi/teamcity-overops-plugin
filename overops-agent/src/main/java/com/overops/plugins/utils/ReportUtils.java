@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class ReportUtils {
 
+    private final static String STRING_FORMAT = "%,d";
+
     public static OverOpsReportModel copyResult(ReportBuilder.QualityReport report) {
         OverOpsReportModel result = new OverOpsReportModel();
         result.setMarkedUnstable(report.isMarkedUnstable());
@@ -43,12 +45,12 @@ public class ReportUtils {
         result.setPassedRegressedEvents(getPassedRegressedEvents(report));
         result.setRegressedEvents(getRegressedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
 
-        result.setNewGateTotal(String.format("%,d", report.getNewIssues().size()));
-        result.setResurfacedGateTotal(String.format("%,d", report.getResurfacedErrors().size()));
-        result.setCriticalGateTotal(String.format("%,d", report.getCriticalErrors().size()));
-        result.setTotalGateTotal(String.format("%,d", report.getEventVolume()));
-        result.setUniqueGateTotal(String.format("%,d", report.getUniqueEventsCount()));
-        result.setRegressionGateTotal(String.format("%,d", report.getRegressions() != null ? report.getRegressions().size() : 0));
+        result.setNewGateTotal(String.format(STRING_FORMAT, report.getNewIssues() != null ? report.getNewIssues().size() : 0));
+        result.setResurfacedGateTotal(String.format(STRING_FORMAT, report.getResurfacedErrors() != null ? report.getResurfacedErrors().size() : 0));
+        result.setCriticalGateTotal(String.format(STRING_FORMAT, report.getCriticalErrors() != null ? report.getCriticalErrors().size() : 0));
+        result.setTotalGateTotal(String.format(STRING_FORMAT, report.getEventVolume()));
+        result.setUniqueGateTotal(String.format(STRING_FORMAT, report.getUniqueEventsCount()));
+        result.setRegressionGateTotal(String.format(STRING_FORMAT, report.getRegressions() != null ? report.getRegressions().size() : 0));
 
         // hide "total" column in summary table on old reports which don't have this data saved
         result.setHasTotal(true);
@@ -56,22 +58,23 @@ public class ReportUtils {
         return result;
     }
 
-    private static String getDeploymentName(ReportBuilder.QualityReport report) {
-        return Optional.of(report.getInput()).filter(e -> Objects.nonNull(e.deployments))
-                .map(e -> e.deployments).map(Object::toString).map(e -> e.replace("[", ""))
-                .map(e -> e.replace("]", "")).orElse("");
+    public static OverOpsReportModel exceptionResult(Exception exception) {
+        OverOpsReportModel result = new OverOpsReportModel();
+        result.setException(exception);
+        return result;
     }
 
     private static String getSummary(ReportBuilder.QualityReport report) {
         if (report.getUnstable() && report.isMarkedUnstable()) {
-            //the build is unstable when marking the build as unstable
-            return "OverOps has marked build " + getDeploymentName(report) + " as unstable.";
-        } else if (!report.isMarkedUnstable() && report.getUnstable()) {
+            // the build is unstable when marking the build as unstable
+            // teamcity has no "unstable" status like Jenkins, so we're using "failure"
+            return "OverOps has marked build "+ report.getDeploymentName() + " as \"failure\".";
+        } else if (report.getUnstable() && !report.isMarkedUnstable()) {
             //unstable build stable when NOT marking the build as unstable
-            return "OverOps has detected issues with build " + getDeploymentName(report) + "  but did not mark the build as unstable.";
+            return "OverOps has detected issues with build "+ report.getDeploymentName() + " but did not mark the build as \"failure\".";
         } else {
             //stable build when marking the build as unstable
-            return "Congratulations, build " + getDeploymentName(report) + " has passed all quality gates!";
+            return "Congratulations, build " + report.getDeploymentName() + " has passed all quality gates!";
         }
     }
 
@@ -161,10 +164,6 @@ public class ReportUtils {
         return Optional.ofNullable(report.getCriticalErrors()).orElse(new ArrayList<>());
     }
 
-    private static boolean getCountGates(ReportBuilder.QualityReport report) {
-        return getCheckUniqueErrors(report) || getCheckTotalErrors(report);
-    }
-
     private static boolean getCheckTotalErrors(ReportBuilder.QualityReport report) {
         return report.isCheckVolumeGate();
     }
@@ -231,4 +230,8 @@ public class ReportUtils {
     private static List<OOReportEvent> getRegressedEvents(ReportBuilder.QualityReport report) {
         return Optional.ofNullable(report.getAllIssues()).orElse(new ArrayList<>());
     }
+
+        // exception handling in the UI
+        // result.setHasException(report.getHasException());
+
 }

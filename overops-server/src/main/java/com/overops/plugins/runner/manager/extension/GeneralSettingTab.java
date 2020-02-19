@@ -4,14 +4,12 @@ import com.overops.plugins.runner.manager.model.GeneralSetting;
 import com.overops.plugins.runner.manager.service.SettingService;
 import com.overops.plugins.runner.manager.service.impl.SettingServiceImpl;
 import jetbrains.buildServer.controllers.admin.projects.EditProjectTab;
-import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.web.openapi.PagePlaces;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.overops.plugins.Constants.*;
