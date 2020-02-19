@@ -335,7 +335,7 @@
         <td>
             <props:checkboxProperty name="debug" className="checkBoxField"/>
             <span class="smallNote">
-                If checked, all queries with results will be displayed in the OverOps reliability report. 
+                If checked, all queries with results will be displayed in the build log. 
                 <em>For debugging purposes only.</em>
               </span>
           </td>
