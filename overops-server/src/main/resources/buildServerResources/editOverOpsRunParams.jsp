@@ -353,6 +353,12 @@
               </span>
           </td>
     </tr>
+    <tr>
+        <th class="noBorder"><label for="errorSuccess">Mark build "success" if unable to generate a Quality Report:</label></th>
+        <td>
+            <props:checkboxProperty name="errorSuccess" className="checkBoxField"/>
+        </td>
+    </tr>
 </l:settingsGroup>
 
 <style>
