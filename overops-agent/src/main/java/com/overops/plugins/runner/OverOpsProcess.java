@@ -48,15 +48,13 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
     }
 
     @Override
-    public BuildFinishedStatus call() throws Exception {
+    public BuildFinishedStatus call() {
+        Setting setting = new Setting(context.getRunnerParameters());
 
-        Setting setting = new Setting(context.getRunnerParameters().get(SETTING_URL),
-            context.getRunnerParameters().get(SETTING_ENV_ID), context.getRunnerParameters().get(SETTING_TOKEN));
+        QueryOverOps params = new QueryOverOps(context.getRunnerParameters());
+        params.setServiceId(setting.getEnvironmentID());
 
-        QueryOverOps params = QueryOverOps.mapToObject(context.getRunnerParameters());
-        params.setServiceId(setting.getOverOpsSID());
-
-        OverOpsReportModel reportModel = null;
+        OverOpsReportModel reportModel;
 
         try {
             ReportBuilder.QualityReport report = overOpsService.perform(setting, params, logger);

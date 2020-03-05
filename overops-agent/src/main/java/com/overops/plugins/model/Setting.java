@@ -1,46 +1,54 @@
 package com.overops.plugins.model;
 
+import org.springframework.util.StringUtils;
+
+import java.util.Map;
+
+import static com.overops.plugins.Constants.*;
+
 public class Setting {
-    private String overOpsURL;
-    private String overOpsSID;
-    private String overOpsAPIKey;
+    private final String appHost;
+    private final String environmentID;
+    private final String apiKey;
 
-    public Setting(String overOpsURL, String overOpsSID, String overOpsAPIKey) {
-        this.overOpsURL = overOpsURL;
-        this.overOpsSID = overOpsSID.toUpperCase();
-        this.overOpsAPIKey = overOpsAPIKey;
+    public Setting(Map<String, String> params) {
+        this.appHost = params.get(SETTING_APP_HOST);
+        this.environmentID = params.get(SETTING_ENV_ID).toUpperCase();
+        this.apiKey = params.get(SETTING_API_TOKEN);
     }
 
-    public String getOverOpsURL() {
-        return overOpsURL;
+    public String getAppHost() {
+        return appHost;
     }
 
-    public void setOverOpsURL(String overOpsURL) {
-        this.overOpsURL = overOpsURL;
+    public String getEnvironmentID() {
+        return environmentID;
     }
 
-    public String getOverOpsSID() {
-        return overOpsSID;
+    public String getAPIKey() {
+        return apiKey;
     }
 
-    public void setOverOpsSID(String overOpsSID) {
-        this.overOpsSID = overOpsSID;
-    }
+    public void validate() {
+        if (StringUtils.isEmpty(appHost)) {
+            throw new IllegalArgumentException("Missing host name");
+        }
 
-    public String getOverOpsAPIKey() {
-        return overOpsAPIKey;
-    }
+        if (StringUtils.isEmpty(environmentID)) {
+            throw new IllegalArgumentException("Missing environment Id");
+        }
 
-    public void setOverOpsAPIKey(String overOpsAPIKey) {
-        this.overOpsAPIKey = overOpsAPIKey;
+        if (StringUtils.isEmpty(apiKey)) {
+            throw new IllegalArgumentException("Missing api key");
+        }
     }
 
     @Override
     public String toString() {
         return "GeneralSetting{" +
-                "overOpsURL='" + overOpsURL + '\'' +
-                ", overOpsSID='" + overOpsSID + '\'' +
-                ", overOpsAPIKey='" + overOpsAPIKey + '\'' +
+                "overOpsURL='" + appHost + '\'' +
+                ", overOpsSID='" + environmentID + '\'' +
+                ", overOpsAPIKey='" + apiKey + '\'' +
                 '}';
     }
 }

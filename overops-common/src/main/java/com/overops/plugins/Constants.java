@@ -7,11 +7,9 @@ public class Constants {
     public static final String PLUGIN_NAME = "OverOps";
     public static final String PLUGIN_DESCRIPTION = "Generate OverOps Quality Report";
 
-    public static final String GENERAL_SETTING_TAB_TITLE = "OverOps Settings";
-
-    public static final String SETTING_URL = "url";
+    public static final String SETTING_APP_HOST = "url";
     public static final String SETTING_ENV_ID = "envId";
-    public static final String SETTING_TOKEN = "token";
+    public static final String SETTING_API_TOKEN = "token";
 
     public static final String OVER_OPS_MANAGER_KEY = "overops";
 

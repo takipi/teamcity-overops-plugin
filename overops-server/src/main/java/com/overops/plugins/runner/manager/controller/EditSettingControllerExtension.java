@@ -32,9 +32,9 @@ public class EditSettingControllerExtension implements EditRunTypeControllerExte
     public void fillModel(@NotNull HttpServletRequest request, @NotNull BuildTypeForm form, @NotNull Map<String, Object> model) {
         Optional.ofNullable(settingService.getSetting(form.getProject().getProjectId()))
                 .ifPresent(setting -> {
-                    model.put(SETTING_URL, setting.getUrl());
+                    model.put(SETTING_APP_HOST, setting.getUrl());
                     model.put(SETTING_ENV_ID, setting.getEnvId());
-                    model.put(SETTING_TOKEN, setting.getToken());
+                    model.put(SETTING_API_TOKEN, setting.getToken());
                 });
     }
 
@@ -52,8 +52,7 @@ public class EditSettingControllerExtension implements EditRunTypeControllerExte
     @NotNull
     @Override
     public ActionErrors validate(@NotNull HttpServletRequest request, @NotNull BuildTypeForm form) {
-        final ActionErrors errors = new ActionErrors();
-        return errors;
+        return new ActionErrors();
     }
 
     @Override
