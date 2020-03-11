@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.overops.plugins.Constants.SETTING_ENV_ID;
-import static com.overops.plugins.Constants.SETTING_TOKEN;
-import static com.overops.plugins.Constants.SETTING_URL;
+import static com.overops.plugins.Constants.SETTING_API_TOKEN;
+import static com.overops.plugins.Constants.SETTING_APP_HOST;
 
 public class GeneralSetting implements ProjectSettings {
     private String url;
@@ -20,9 +20,9 @@ public class GeneralSetting implements ProjectSettings {
     }
 
     public GeneralSetting(Map<String, String> parameters) {
-        this.url = parameters.getOrDefault(SETTING_URL, "");
+        this.url = parameters.getOrDefault(SETTING_APP_HOST, "");
         this.envId = parameters.getOrDefault(SETTING_ENV_ID, "");
-        this.token = parameters.getOrDefault(SETTING_TOKEN, "");
+        this.token = parameters.getOrDefault(SETTING_API_TOKEN, "");
     }
 
     public GeneralSetting(String url, String envId, String token) {
@@ -62,23 +62,23 @@ public class GeneralSetting implements ProjectSettings {
 
     @Override
     public void readFrom(Element element) {
-        setUrl(element.getAttributeValue(SETTING_URL));
+        setUrl(element.getAttributeValue(SETTING_APP_HOST));
         setEnvId(element.getAttributeValue(Constants.SETTING_ENV_ID));
-        setToken(element.getAttributeValue(Constants.SETTING_TOKEN));
+        setToken(element.getAttributeValue(Constants.SETTING_API_TOKEN));
     }
 
     @Override
     public void writeTo(Element element) {
-        element.setAttribute(SETTING_URL, this.url);
+        element.setAttribute(SETTING_APP_HOST, this.url);
         element.setAttribute(Constants.SETTING_ENV_ID, this.envId);
-        element.setAttribute(Constants.SETTING_TOKEN, this.token);
+        element.setAttribute(Constants.SETTING_API_TOKEN, this.token);
     }
 
     public Map<String, String> toMap() {
         final Map<String, String> params = new HashMap<>();
-        params.put(SETTING_URL, this.url);
+        params.put(SETTING_APP_HOST, this.url);
         params.put(SETTING_ENV_ID, this.envId);
-        params.put(SETTING_TOKEN, this.token);
+        params.put(SETTING_API_TOKEN, this.token);
         return params;
     }
 }

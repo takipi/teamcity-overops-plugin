@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class OverOpsServiceImpl implements OverOpsService {
-    private static final String SEPERATOR = ",";
+    private static final String SEPARATOR = ",";
     private boolean runRegressions = false;
 
     @Override
@@ -39,20 +39,20 @@ public class OverOpsServiceImpl implements OverOpsService {
 
         validateInputs(setting, queryOverOps, printStream);
 
-        RemoteApiClient apiClient = (RemoteApiClient) RemoteApiClient.newBuilder().setHostname(setting.getOverOpsURL()).setApiKey(setting.getOverOpsAPIKey()).build();
+        RemoteApiClient apiClient = (RemoteApiClient) RemoteApiClient.newBuilder().setHostname(setting.getAppHost()).setApiKey(setting.getAPIKey()).build();
 
         if (Objects.nonNull(printStream) && (queryOverOps.isDebug())) {
             apiClient.addObserver(new ApiClientObserver(printStream, queryOverOps.isDebug()));
         }
 
-        SummarizedView allEventsView = ViewUtil.getServiceViewByName(apiClient, setting.getOverOpsSID().toUpperCase(), "All Events");
+        SummarizedView allEventsView = ViewUtil.getServiceViewByName(apiClient, setting.getEnvironmentID(), "All Events");
 
         if (Objects.isNull(allEventsView)) {
-            if(Objects.nonNull(printStream)) {
-                printStream.println("Could not acquire ID for 'All Events'. Please check connection to " + setting.getOverOpsURL());
+            if (Objects.nonNull(printStream)) {
+                printStream.println("Could not acquire ID for 'All Events'. Please check connection to " + setting.getAppHost());
             }
             throw new IllegalStateException(
-                    "Could not acquire ID for 'All Events'. Please check connection to " + setting.getOverOpsURL());
+                    "Could not acquire ID for 'All Events'. Please check connection to " + setting.getAppHost());
         }
 
         RegressionInput input = setupRegressionData(setting, queryOverOps, allEventsView, printStream);
@@ -76,24 +76,15 @@ public class OverOpsServiceImpl implements OverOpsService {
         }
     }
 
-    private void validateInputs (Setting setting, QueryOverOps queryOverOps, PrintStream printStream) {
-        String apiHost = setting.getOverOpsURL();
-        String apiKey = setting.getOverOpsAPIKey();
-
-        if (StringUtils.isEmpty(apiHost)) {
-            throw new IllegalArgumentException("Missing host name");
-        }
-
-        if (StringUtils.isEmpty(apiKey)) {
-            throw new IllegalArgumentException("Missing api key");
-        }
+    private void validateInputs(Setting setting, QueryOverOps queryOverOps, PrintStream printStream) {
+        setting.validate();
 
         //validate active and baseline time window
         if (queryOverOps.getCheckRegressionErrors()) {
             if (!"0".equalsIgnoreCase(queryOverOps.getActiveTimespan())) {
                 if (convertToMinutes(queryOverOps.getActiveTimespan()) == 0) {
-                    printStream.println("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() +  " is not properly formated. See help for format instructions.");
-                    throw new IllegalArgumentException("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() +  " is not properly formated. See help for format instructions.");
+                    printStream.println("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() + " is not properly formated. See help for format instructions.");
+                    throw new IllegalArgumentException("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() + " is not properly formated. See help for format instructions.");
                 }
             }
             if (!"0".equalsIgnoreCase(queryOverOps.getBaselineTimespan())) {
@@ -104,18 +95,12 @@ public class OverOpsServiceImpl implements OverOpsService {
             }
         }
 
-
-        if (StringUtils.isEmpty(setting.getOverOpsSID())) {
-            throw new IllegalArgumentException("Missing environment Id");
-        }
-
     }
 
-    private RegressionInput setupRegressionData(Setting setting, QueryOverOps queryOverOps, SummarizedView allEventsView, PrintStream printStream)
-            throws InterruptedException, IOException {
+    private RegressionInput setupRegressionData(Setting setting, QueryOverOps queryOverOps, SummarizedView allEventsView, PrintStream printStream) {
 
         RegressionInput input = new RegressionInput();
-        input.serviceId = setting.getOverOpsSID();
+        input.serviceId = setting.getEnvironmentID();
         input.viewId = allEventsView.id;
         input.applictations = parseArrayString(queryOverOps.getApplicationName(), printStream, "Application Name");
         input.deployments = parseArrayString(queryOverOps.getDeploymentName(), printStream, "Deployment Name");
@@ -142,7 +127,7 @@ public class OverOpsServiceImpl implements OverOpsService {
     private int convertToMinutes(String timeWindow) {
 
         if (StringUtils.isEmpty(timeWindow)) {
-          return 0;
+            return 0;
         }
 
         if (timeWindow.toLowerCase().contains("d")) {
@@ -163,7 +148,7 @@ public class OverOpsServiceImpl implements OverOpsService {
             return Collections.emptySet();
         }
 
-        return Arrays.asList(value.trim().split(Pattern.quote(SEPERATOR)));
+        return Arrays.asList(value.trim().split(Pattern.quote(SEPARATOR)));
     }
 
     private void printInputs(QueryOverOps queryOverOps, PrintStream printStream, RegressionInput input) {
@@ -202,7 +187,7 @@ public class OverOpsServiceImpl implements OverOpsService {
         public void observe(Operation operation, String url, String request, String response, int responseCode, long time) {
             StringBuilder output = new StringBuilder();
 
-            output.append(String.valueOf(operation));
+            output.append(operation);
             output.append(" took ");
             output.append(time / 1000);
             output.append("ms for ");
