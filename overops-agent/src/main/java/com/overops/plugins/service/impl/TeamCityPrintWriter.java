@@ -9,7 +9,6 @@ public class TeamCityPrintWriter extends PrintStream {
 
     private BuildProgressLogger logger;
 
-
     public TeamCityPrintWriter(@NotNull OutputStream out, BuildProgressLogger logger) {
         super(out);
         this.logger = logger;

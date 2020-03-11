@@ -11,10 +11,10 @@ public final class Util {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    public static void close(final Closeable fw) {
-        if (fw != null) {
+    public static void close(final Closeable closeable) {
+        if (closeable != null) {
             try {
-                fw.close();
+                closeable.close();
             } catch (IOException ignore) {
                 // ignore
             }

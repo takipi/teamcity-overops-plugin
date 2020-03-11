@@ -16,7 +16,7 @@ public class OverOpsBuildProcess implements BuildProcess {
     @NotNull
     private BuildProgressLogger logger;
 
-    private OverOpsProcess overOpsProcess;
+    private OverOpsCallable overOpsCallable;
 
     private ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -25,13 +25,13 @@ public class OverOpsBuildProcess implements BuildProcess {
     public OverOpsBuildProcess(@NotNull AgentRunningBuild runningBuild, @NotNull BuildRunnerContext context,
         @NotNull OverOpsService overOpsService, @NotNull ArtifactsWatcher artifactsWatcher) {
         this.logger = runningBuild.getBuildLogger();
-        this.overOpsProcess = new OverOpsProcess(runningBuild, logger, artifactsWatcher, context, overOpsService);
+        this.overOpsCallable = new OverOpsCallable(runningBuild, logger, artifactsWatcher, context, overOpsService);
     }
 
     @Override
     public void start() throws RunBuildException {
         logger.message("OverOps agent started:");
-        processFuture = executor.submit(overOpsProcess);
+        processFuture = executor.submit(overOpsCallable);
     }
 
     @Override

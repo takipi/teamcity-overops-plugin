@@ -231,7 +231,4 @@ public class ReportUtils {
         return Optional.ofNullable(report.getAllIssues()).orElse(new ArrayList<>());
     }
 
-        // exception handling in the UI
-        // result.setHasException(report.getHasException());
-
 }
