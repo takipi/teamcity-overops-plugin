@@ -1,8 +1,17 @@
 package com.overops.plugins.model;
 
+import org.springframework.util.StringUtils;
+
+import java.io.PrintStream;
 import java.util.Map;
 
-public class QueryOverOps {
+import static com.overops.plugins.Constants.*;
+import static com.overops.plugins.Util.convertToMinutes;
+
+public class OverOpsConfiguration {
+    private final String appHost;
+    private final String environmentID;
+    private final String apiKey;
     private String applicationName;
     private String deploymentName;
     private String serviceId;
@@ -195,7 +204,51 @@ public class QueryOverOps {
       this.errorSuccess = errorSuccess;
     }
 
-    public QueryOverOps(Map<String, String> params) {
+    public String getAppHost() {
+        return appHost;
+    }
+
+    public String getEnvironmentID() {
+        return environmentID;
+    }
+
+    public String getAPIKey() {
+        return apiKey;
+    }
+
+    public void validate(PrintStream printStream) {
+        if (StringUtils.isEmpty(appHost)) {
+            throw new IllegalArgumentException("Missing host name");
+        }
+
+        if (StringUtils.isEmpty(environmentID)) {
+            throw new IllegalArgumentException("Missing environment Id");
+        }
+
+        if (StringUtils.isEmpty(apiKey)) {
+            throw new IllegalArgumentException("Missing api key");
+        }
+
+        if (getCheckRegressionErrors()) {
+            if (!"0".equalsIgnoreCase(getActiveTimespan())) {
+                if (convertToMinutes(getActiveTimespan()) == 0) {
+                    printStream.println("For Increasing Error Gate, the active timewindow currently set to: " + getActiveTimespan() + " is not properly formated. See help for format instructions.");
+                    throw new IllegalArgumentException("For Increasing Error Gate, the active timewindow currently set to: " + getActiveTimespan() + " is not properly formated. See help for format instructions.");
+                }
+            }
+            if (!"0".equalsIgnoreCase(getBaselineTimespan())) {
+                if (convertToMinutes(getBaselineTimespan()) == 0) {
+                    printStream.println("For Increasing Error Gate, the baseline timewindow currently set to: " + getBaselineTimespan() + " cannot be zero or is improperly formated. See help for format instructions.");
+                    throw new IllegalArgumentException("For Increasing Error Gate, the baseline timewindow currently set to: " + getBaselineTimespan() + " cannot be zero or is improperly formated. See help for format instructions.");
+                }
+            }
+        }
+    }
+
+    public OverOpsConfiguration(Map<String, String> params) {
+        this.appHost = params.get(SETTING_APP_HOST);
+        this.environmentID = params.get(SETTING_ENV_ID).toUpperCase();
+        this.apiKey = params.get(SETTING_API_TOKEN);
         applicationName = params.get("applicationName");
         deploymentName = params.get("deploymentName");
         serviceId = params.get("serviceId");
@@ -234,7 +287,10 @@ public class QueryOverOps {
     @Override
     public String toString() {
         return "QueryOverOps{" +
-                "applicationName='" + applicationName + '\'' +
+                "overOpsURL='" + appHost + '\'' +
+                ", overOpsSID='" + environmentID + '\'' +
+                ", overOpsAPIKey='" + apiKey + '\'' +
+                ", applicationName='" + applicationName + '\'' +
                 ", deploymentName='" + deploymentName + '\'' +
                 ", serviceId='" + serviceId + '\'' +
                 ", regexFilter='" + regexFilter + '\'' +

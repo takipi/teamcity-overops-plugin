@@ -2,6 +2,7 @@ package com.overops.plugins;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,4 +50,22 @@ public final class Util {
         }
     }
 
+    public static int convertToMinutes(String timeWindow) {
+
+        if (timeWindow == null || timeWindow.trim().length() == 0 ) {
+            return 0;
+        }
+
+        if (timeWindow.toLowerCase().contains("d")) {
+            int days = Integer.parseInt(timeWindow.substring(0, timeWindow.indexOf("d")));
+            return days * 24 * 60;
+        } else if (timeWindow.toLowerCase().contains("h")) {
+            int hours = Integer.parseInt(timeWindow.substring(0, timeWindow.indexOf("h")));
+            return hours * 60;
+        } else if (timeWindow.toLowerCase().contains("m")) {
+            return Integer.parseInt(timeWindow.substring(0, timeWindow.indexOf("m")));
+        }
+
+        return 0;
+    }
 }

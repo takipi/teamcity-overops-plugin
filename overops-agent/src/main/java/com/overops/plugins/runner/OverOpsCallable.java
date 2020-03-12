@@ -3,19 +3,10 @@ package com.overops.plugins.runner;
 import com.overops.plugins.Result;
 import com.overops.plugins.Util;
 import com.overops.plugins.model.OverOpsReportModel;
-import com.overops.plugins.model.QueryOverOps;
-import com.overops.plugins.model.Setting;
+import com.overops.plugins.model.OverOpsConfiguration;
 import com.overops.plugins.service.OverOpsService;
 import com.overops.plugins.service.impl.ReportBuilder;
 import com.overops.plugins.utils.ReportUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.concurrent.Callable;
-
 import jetbrains.buildServer.agent.AgentRunningBuild;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildProgressLogger;
@@ -23,6 +14,13 @@ import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.concurrent.Callable;
 
 import static com.overops.plugins.Constants.*;
 
@@ -51,22 +49,20 @@ public class OverOpsCallable implements Callable<BuildFinishedStatus> {
 
     @Override
     public BuildFinishedStatus call() {
-        Setting setting = new Setting(context.getRunnerParameters());
-        QueryOverOps params = new QueryOverOps(context.getRunnerParameters());
-        params.setServiceId(setting.getEnvironmentID());
+        OverOpsConfiguration configuration = new OverOpsConfiguration(context.getRunnerParameters());
 
-        OverOpsReportModel reportModel = generateOverOpsReportModel(setting, params);
-        return publishModelAndReturnStatus(params, reportModel);
+        OverOpsReportModel reportModel = generateOverOpsReportModel(configuration);
+        return publishModelAndReturnStatus(configuration, reportModel);
     }
 
     @NotNull
-    private BuildFinishedStatus publishModelAndReturnStatus(QueryOverOps params, OverOpsReportModel reportModel) {
+    private BuildFinishedStatus publishModelAndReturnStatus(OverOpsConfiguration configuration, OverOpsReportModel reportModel) {
         publishArtifactObject(reportModel, OV_REPORTS_FILE_RESULT, "Cannot create result artifact: ");
 
         logger.message(reportModel.getSummary());
 
         if (reportModel.getException() != null) {
-            return params.isErrorSuccess() ? BuildFinishedStatus.FINISHED_SUCCESS : BuildFinishedStatus.INTERRUPTED;
+            return configuration.isErrorSuccess() ? BuildFinishedStatus.FINISHED_SUCCESS : BuildFinishedStatus.INTERRUPTED;
         } else {
             publishArtifactObject(new Result(reportModel.isUnstable()), OV_REPORTS_FILE, "Cannot create artifact: ");
             if (reportModel.isUnstable() && reportModel.isMarkedUnstable()) {
@@ -78,11 +74,11 @@ public class OverOpsCallable implements Callable<BuildFinishedStatus> {
     }
 
     @NotNull
-    private OverOpsReportModel generateOverOpsReportModel(Setting setting, QueryOverOps params) {
+    private OverOpsReportModel generateOverOpsReportModel(OverOpsConfiguration configuration) {
         OverOpsReportModel reportModel;
 
         try {
-            ReportBuilder.QualityReport report = overOpsService.perform(setting, params, logger);
+            ReportBuilder.QualityReport report = overOpsService.perform(configuration, logger);
             reportModel = ReportUtils.copyResult(report);
         } catch (Exception exception) {
             reportModel = ReportUtils.exceptionResult(exception);
