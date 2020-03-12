@@ -31,7 +31,7 @@ target/*
 .classpath
 .settings
 .project
-.iml
+*.iml
 .vscode/
 
 # macos
