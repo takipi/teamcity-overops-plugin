@@ -1,11 +1,13 @@
 package com.overops.plugins.runner;
 
 import com.overops.plugins.service.OverOpsService;
+
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.*;
 import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
@@ -15,15 +17,12 @@ public class OverOpsBuildProcess implements BuildProcess {
 
     @NotNull
     private BuildProgressLogger logger;
-
     private OverOpsCallable overOpsCallable;
-
     private ExecutorService executor = Executors.newSingleThreadExecutor();
-
     private Future<BuildFinishedStatus> processFuture;
 
     public OverOpsBuildProcess(@NotNull AgentRunningBuild runningBuild, @NotNull BuildRunnerContext context,
-        @NotNull OverOpsService overOpsService, @NotNull ArtifactsWatcher artifactsWatcher) {
+                               @NotNull OverOpsService overOpsService, @NotNull ArtifactsWatcher artifactsWatcher) {
         this.logger = runningBuild.getBuildLogger();
         this.overOpsCallable = new OverOpsCallable(runningBuild, logger, artifactsWatcher, context, overOpsService);
     }

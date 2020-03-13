@@ -53,7 +53,8 @@ public class SettingActionController extends BaseAjaxActionController implements
             }
         } else {
             Optional.ofNullable(settingService.getProjectByExternalId(request.getParameter(FIELD_PROJECT_ID)))
-                    .filter(project -> Objects.nonNull(ajaxResponse)).ifPresent(project -> {
+                    .filter(project -> Objects.nonNull(ajaxResponse))
+                    .ifPresent(project -> {
                 GeneralSetting setting = settingService.getSetting(request.getParameter(FIELD_PROJECT_ID));
                 setting.setUrl(url);
                 setting.setToken(token);

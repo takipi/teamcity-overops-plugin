@@ -1,11 +1,8 @@
 package com.overops.plugins.runner.manager.model;
 
 public class TestServiceResponse {
-    private boolean status;
-    private String message;
-
-    public TestServiceResponse() {
-    }
+    private final boolean status;
+    private final String message;
 
     public TestServiceResponse(boolean status, String message) {
         this.status = status;
@@ -16,16 +13,8 @@ public class TestServiceResponse {
         return status;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public static TestServiceResponse ok(String message) {

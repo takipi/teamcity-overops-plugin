@@ -1,4 +1,4 @@
-package com.overops.plugins.runner.manager.controller;
+package com.overops.plugins.runner.manager.extension;
 
 import com.overops.plugins.Constants;
 import com.overops.plugins.runner.manager.service.SettingService;
@@ -25,7 +25,6 @@ public class EditSettingControllerExtension implements EditRunTypeControllerExte
     public EditSettingControllerExtension(@NotNull SettingService settingService, @NotNull final SBuildServer server) {
         server.registerExtension(EditRunTypeControllerExtension.class, Constants.RUNNER_TYPE, this);
         this.settingService = settingService;
-
     }
 
     @Override
@@ -39,9 +38,7 @@ public class EditSettingControllerExtension implements EditRunTypeControllerExte
     }
 
     @Override
-    public void updateState(@NotNull HttpServletRequest request, @NotNull BuildTypeForm form) {
-
-    }
+    public void updateState(@NotNull HttpServletRequest request, @NotNull BuildTypeForm form) {}
 
     @Nullable
     @Override
@@ -56,7 +53,5 @@ public class EditSettingControllerExtension implements EditRunTypeControllerExte
     }
 
     @Override
-    public void updateBuildType(@NotNull HttpServletRequest request, @NotNull BuildTypeForm form, @NotNull BuildTypeSettings buildTypeSettings, @NotNull ActionErrors errors) {
-
-    }
+    public void updateBuildType(@NotNull HttpServletRequest request, @NotNull BuildTypeForm form, @NotNull BuildTypeSettings buildTypeSettings, @NotNull ActionErrors errors) {}
 }
