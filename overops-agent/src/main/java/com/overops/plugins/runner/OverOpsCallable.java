@@ -4,8 +4,8 @@ import com.overops.plugins.Result;
 import com.overops.plugins.Util;
 import com.overops.plugins.model.OverOpsReportModel;
 import com.overops.plugins.model.OverOpsConfiguration;
+import com.overops.plugins.model.QualityReport;
 import com.overops.plugins.service.OverOpsService;
-import com.overops.plugins.service.impl.ReportBuilder;
 import com.overops.plugins.utils.ReportUtils;
 import jetbrains.buildServer.agent.AgentRunningBuild;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
@@ -78,7 +78,7 @@ public class OverOpsCallable implements Callable<BuildFinishedStatus> {
         OverOpsReportModel reportModel;
 
         try {
-            ReportBuilder.QualityReport report = overOpsService.perform(configuration, logger);
+            QualityReport report = overOpsService.produceReport(configuration, logger);
             reportModel = ReportUtils.copyResult(report);
         } catch (Exception exception) {
             reportModel = ReportUtils.exceptionResult(exception);

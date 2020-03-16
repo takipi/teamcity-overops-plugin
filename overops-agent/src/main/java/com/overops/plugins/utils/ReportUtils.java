@@ -1,8 +1,8 @@
 package com.overops.plugins.utils;
 
 import com.overops.plugins.model.OverOpsReportModel;
+import com.overops.plugins.model.QualityReport;
 import com.overops.plugins.model.ReportEventModel;
-import com.overops.plugins.service.impl.ReportBuilder;
 import com.takipi.api.client.util.cicd.OOReportEvent;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class ReportUtils {
 
     private final static String STRING_FORMAT = "%,d";
 
-    public static OverOpsReportModel copyResult(ReportBuilder.QualityReport report) {
+    public static OverOpsReportModel copyResult(QualityReport report) {
         OverOpsReportModel result = new OverOpsReportModel();
         result.setMarkedUnstable(report.isMarkedUnstable());
         result.setUnstable(report.getUnstable());
@@ -64,7 +64,7 @@ public class ReportUtils {
         return result;
     }
 
-    private static String getSummary(ReportBuilder.QualityReport report) {
+    private static String getSummary(QualityReport report) {
         if (report.getUnstable() && report.isMarkedUnstable()) {
             // the build is unstable when marking the build as unstable
             // teamcity has no "unstable" status like Jenkins, so we're using "failure"
@@ -78,15 +78,15 @@ public class ReportUtils {
         }
     }
 
-    private static boolean getPassedNewErrorGate(ReportBuilder.QualityReport report) {
+    private static boolean getPassedNewErrorGate(QualityReport report) {
         return getCheckNewEvents(report) && !getNewErrorsExist(report);
     }
 
-    private static boolean getCheckNewEvents(ReportBuilder.QualityReport report) {
+    private static boolean getCheckNewEvents(QualityReport report) {
         return report.isCheckNewGate();
     }
 
-    private static String getNewErrorSummary(ReportBuilder.QualityReport report) {
+    private static String getNewErrorSummary(QualityReport report) {
         if (getNewEvents(report).size() > 0) {
             int count = report.getNewIssues().size();
             StringBuilder sb = new StringBuilder("New Error Gate: Failed, OverOps detected ");
@@ -104,27 +104,27 @@ public class ReportUtils {
         return null;
     }
 
-    private static boolean getNewErrorsExist(ReportBuilder.QualityReport report) {
+    private static boolean getNewErrorsExist(QualityReport report) {
         return getNewEvents(report).size() > 0;
     }
 
-    private static List<OOReportEvent> getNewEvents(ReportBuilder.QualityReport report) {
+    private static List<OOReportEvent> getNewEvents(QualityReport report) {
         return Optional.ofNullable(report.getNewIssues()).orElse(new ArrayList<>());
     }
 
-    private static boolean getPassedResurfacedErrorGate(ReportBuilder.QualityReport report) {
+    private static boolean getPassedResurfacedErrorGate(QualityReport report) {
         return getCheckResurfacedEvents(report) && !getResurfacedErrorsExist(report);
     }
 
-    private static boolean getResurfacedErrorsExist(ReportBuilder.QualityReport report) {
+    private static boolean getResurfacedErrorsExist(QualityReport report) {
         return getResurfacedEvents(report).size() > 0;
     }
 
-    private static boolean getCheckResurfacedEvents(ReportBuilder.QualityReport report) {
+    private static boolean getCheckResurfacedEvents(QualityReport report) {
         return report.isCheckResurfacedGate();
     }
 
-    private static String getResurfacedErrorSummary(ReportBuilder.QualityReport report) {
+    private static String getResurfacedErrorSummary(QualityReport report) {
         if (getResurfacedEvents(report).size() > 0) {
             return "Resurfaced Error Gate: Failed, OverOps detected " + report.getResurfacedErrors().size() + " resurfaced errors in your build.";
         } else if (report.isCheckResurfacedGate()) {
@@ -134,23 +134,23 @@ public class ReportUtils {
         return null;
     }
 
-    private static List<OOReportEvent> getResurfacedEvents(ReportBuilder.QualityReport report) {
+    private static List<OOReportEvent> getResurfacedEvents(QualityReport report) {
         return Optional.ofNullable(report.getResurfacedErrors()).orElse(new ArrayList<>());
     }
 
-    private static boolean getCheckCriticalErrors(ReportBuilder.QualityReport report) {
+    private static boolean getCheckCriticalErrors(QualityReport report) {
         return report.isCheckCriticalGate();
     }
 
-    private static boolean getPassedCriticalErrorGate(ReportBuilder.QualityReport report) {
+    private static boolean getPassedCriticalErrorGate(QualityReport report) {
         return getCheckCriticalErrors(report) && !getCriticalErrorsExist(report);
     }
 
-    private static boolean getCriticalErrorsExist(ReportBuilder.QualityReport report) {
+    private static boolean getCriticalErrorsExist(QualityReport report) {
         return getCriticalEvents(report).size() > 0;
     }
 
-    private static String getCriticalErrorSummary(ReportBuilder.QualityReport report) {
+    private static String getCriticalErrorSummary(QualityReport report) {
         if (getCriticalEvents(report).size() > 0) {
             return "Critical Error Gate: Failed, OverOps detected " + report.getCriticalErrors().size() + " critical errors in your build.";
         } else if (report.isCheckCriticalGate()) {
@@ -160,19 +160,19 @@ public class ReportUtils {
         return null;
     }
 
-    private static List<OOReportEvent> getCriticalEvents(ReportBuilder.QualityReport report) {
+    private static List<OOReportEvent> getCriticalEvents(QualityReport report) {
         return Optional.ofNullable(report.getCriticalErrors()).orElse(new ArrayList<>());
     }
 
-    private static boolean getCheckTotalErrors(ReportBuilder.QualityReport report) {
+    private static boolean getCheckTotalErrors(QualityReport report) {
         return report.isCheckVolumeGate();
     }
 
-    private static boolean getPassedTotalErrorGate(ReportBuilder.QualityReport report) {
+    private static boolean getPassedTotalErrorGate(QualityReport report) {
         return getCheckTotalErrors(report) && (report.getEventVolume() > 0 && report.getEventVolume() < report.getMaxEventVolume());
     }
 
-    private static String getTotalErrorSummary(ReportBuilder.QualityReport report) {
+    private static String getTotalErrorSummary(QualityReport report) {
         if (report.getEventVolume() > 0 && report.getEventVolume() >= report.getMaxEventVolume()) {
             return "Total Error Volume Gate: Failed, OverOps detected " + report.getEventVolume() + " total errors which is >= the max allowable of " + report.getMaxEventVolume();
         } else if (report.getEventVolume() > 0 && report.getEventVolume() < report.getMaxEventVolume()) {
@@ -182,19 +182,19 @@ public class ReportUtils {
         return null;
     }
 
-    private static boolean getCheckUniqueErrors(ReportBuilder.QualityReport report) {
+    private static boolean getCheckUniqueErrors(QualityReport report) {
         return report.isCheckUniqueGate();
     }
 
-    private static boolean getHasTopErrors(ReportBuilder.QualityReport report) {
+    private static boolean getHasTopErrors(QualityReport report) {
         return !getPassedTotalErrorGate(report) || !getPassedUniqueErrorGate(report);
     }
 
-    private static boolean getPassedUniqueErrorGate(ReportBuilder.QualityReport report) {
+    private static boolean getPassedUniqueErrorGate(QualityReport report) {
         return getCheckUniqueErrors(report) && (report.getUniqueEventsCount() > 0 && report.getUniqueEventsCount() < report.getMaxUniqueVolume());
     }
 
-    private static String getUniqueErrorSummary(ReportBuilder.QualityReport report) {
+    private static String getUniqueErrorSummary(QualityReport report) {
         if (report.getUniqueEventsCount() > 0 && report.getUniqueEventsCount() >= report.getMaxUniqueVolume()) {
             return "Unique Error Volume Gate: Failed, OverOps detected " + report.getUniqueEventsCount() + " unique errors which is >= the max allowable of " + report.getMaxUniqueVolume();
         } else if (report.getUniqueEventsCount() > 0 && report.getUniqueEventsCount() < report.getMaxUniqueVolume()) {
@@ -204,11 +204,11 @@ public class ReportUtils {
         return null;
     }
 
-    private static List<OOReportEvent> getTopEvents(ReportBuilder.QualityReport report) {
+    private static List<OOReportEvent> getTopEvents(QualityReport report) {
         return Optional.ofNullable(report.getTopErrors()).orElse(new ArrayList<>());
     }
 
-    private static String getRegressionSumarry(ReportBuilder.QualityReport report) {
+    private static String getRegressionSumarry(QualityReport report) {
         String baselineTime = Objects.nonNull(report.getInput()) ? report.getInput().baselineTime : "";
         if (!getPassedRegressedEvents(report)) {
             return "Increasing Quality Gate: Failed, OverOps detected increasing errors in the current build against the baseline of " + baselineTime;
@@ -219,15 +219,15 @@ public class ReportUtils {
         return null;
     }
 
-    private static boolean getCheckRegressedErrors(ReportBuilder.QualityReport report) {
+    private static boolean getCheckRegressedErrors(QualityReport report) {
         return report.isCheckRegressionGate();
     }
 
-    private static boolean getPassedRegressedEvents(ReportBuilder.QualityReport report) {
+    private static boolean getPassedRegressedEvents(QualityReport report) {
         return !(getCheckRegressedErrors(report) && report.getRegressions() != null && report.getRegressions().size() > 0);
     }
 
-    private static List<OOReportEvent> getRegressedEvents(ReportBuilder.QualityReport report) {
+    private static List<OOReportEvent> getRegressedEvents(QualityReport report) {
         return Optional.ofNullable(report.getAllIssues()).orElse(new ArrayList<>());
     }
 
