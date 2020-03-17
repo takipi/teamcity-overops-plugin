@@ -224,6 +224,14 @@ public class OverOpsConfiguration {
         return apiKey;
     }
 
+    public boolean isCountGatePresent() {
+        return getMaxErrorVolume() != 0 || getMaxUniqueErrors() != 0;
+    }
+
+    public boolean isSomeGateBesideRegressionToProcess() {
+        return isCountGatePresent() || isNewEvents() || isResurfacedErrors() || getRegexFilter() != null;
+    }
+
     public void validate(PrintStream printStream) {
         if (StringUtils.isEmpty(appHost)) {
             throw new IllegalArgumentException("Missing host name");

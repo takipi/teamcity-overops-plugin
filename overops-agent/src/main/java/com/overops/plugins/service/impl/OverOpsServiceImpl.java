@@ -38,10 +38,7 @@ public class OverOpsServiceImpl implements OverOpsService {
         SummarizedView allEventsView = retrieveAllEventsView(apiClient);
         RegressionInput input = setupRegressionData(allEventsView.id);
 
-        return ReportBuilder.execute(apiClient, input, config.getMaxErrorVolume(), config.getMaxUniqueErrors(),
-                config.getPrintTopIssues(), config.getRegexFilter(), config.isNewEvents(), config.isResurfacedErrors(),
-                config.isRegressionPresent(), config.isMarkUnstable(), printStream, config.isDebug());
-
+        return new ReportBuilder(apiClient, input, config, printStream).build();
     }
 
     @NotNull
@@ -124,12 +121,9 @@ public class OverOpsServiceImpl implements OverOpsService {
         return input;
     }
 
-    private static Collection<String> parseArrayString(String value) {
-        if (StringUtils.isEmpty(value)) {
-            return Collections.emptySet();
-        }
-
-        return Arrays.asList(value.trim().split(Pattern.quote(SEPARATOR)));
+    private Collection<String> parseArrayString(String value) {
+        return StringUtils.isEmpty(value) ? Collections.emptySet()
+                : Arrays.asList(value.trim().split(Pattern.quote(SEPARATOR)));
     }
 
     private void printInputs(RegressionInput input) {

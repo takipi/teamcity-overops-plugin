@@ -2,6 +2,7 @@ package com.overops.plugins.service.impl;
 
 import com.google.gson.Gson;
 import com.overops.plugins.model.OOReportRegressedEvent;
+import com.overops.plugins.model.OverOpsConfiguration;
 import com.overops.plugins.model.QualityReport;
 import com.takipi.api.client.ApiClient;
 import com.takipi.api.client.result.event.EventResult;
@@ -16,9 +17,16 @@ import java.util.regex.Pattern;
 
 public class ReportBuilder {
 
-    private static class ReportVolume {
-        protected List<OOReportEvent> topEvents;
-        protected Collection<EventResult> filter;
+    private final ApiClient apiClient;
+    private final RegressionInput input;
+    private final OverOpsConfiguration config;
+    private final PrintStream output;
+
+    public ReportBuilder(ApiClient apiClient, RegressionInput input, OverOpsConfiguration config, PrintStream output) {
+        this.apiClient = apiClient;
+        this.input = input;
+        this.config = config;
+        this.output = output;
     }
 
     private static boolean allowEvent(EventResult event, Pattern pattern) {
@@ -135,27 +143,18 @@ public class ReportBuilder {
         return result;
     }
 
-    /*
-     * Entry point into report engine
-     */
-    public static QualityReport execute(ApiClient apiClient, RegressionInput input,
-                                        Integer maxEventVolume, Integer maxUniqueErrors, int topEventLimit, String regexFilter,
-                                        boolean newEvents, boolean resurfacedEvents, boolean runRegressions, boolean markedUnstable, PrintStream output, boolean verbose) {
 
-        //check if total or unique gates are being tested
-        boolean countGate = false;
-        if (maxEventVolume != 0 || maxUniqueErrors != 0) {
-            countGate = true;
-        }
-        boolean checkMaxEventGate = maxEventVolume != 0;
-        boolean checkUniqueEventGate = maxUniqueErrors != 0;
+    public QualityReport build() {
+        boolean checkMaxEventGate = config.getMaxErrorVolume() != 0;
+        boolean checkUniqueEventGate = config.getMaxUniqueErrors() != 0;
 
-        //get the CICD quality report for all gates but Regressions
-        //initialize the QualityGateReport so we don't get null pointers below
+
         QualityGateReport qualityGateReport = new QualityGateReport();
-        if (countGate || newEvents || resurfacedEvents || regexFilter != null) {
-            qualityGateReport = ProcessQualityGates.processCICDInputs(apiClient, input, newEvents, resurfacedEvents,
-                    regexFilter, topEventLimit, countGate, output, verbose);
+        if (config.isSomeGateBesideRegressionToProcess()) {
+            //TODO fix if call fails case
+            qualityGateReport = ProcessQualityGates.processCICDInputs(apiClient, input, config.isNewEvents(),
+                    config.isResurfacedErrors(), config.getRegexFilter(), config.getPrintTopIssues(),
+                    config.isCountGatePresent(), output, config.isDebug());
         }
 
         //run the regression gate
@@ -163,11 +162,11 @@ public class ReportBuilder {
         RateRegression rateRegression = null;
         List<OOReportRegressedEvent> regressions = null;
         boolean hasRegressions = false;
-        if (runRegressions) {
-            rateRegression = RegressionUtil.calculateRateRegressions(apiClient, input, output, verbose);
+        if (config.isRegressionPresent()) {
+            rateRegression = RegressionUtil.calculateRateRegressions(apiClient, input, output, config.isDebug());
 
             reportVolume = getReportVolume(apiClient, input,
-                    rateRegression, topEventLimit, regexFilter, output, verbose);
+                    rateRegression, config.getPrintTopIssues(), config.getRegexFilter(), output, config.isDebug());
 
             regressions = getAllRegressions(apiClient, input, rateRegression, reportVolume.filter);
             if (regressions != null && regressions.size() > 0) {
@@ -177,44 +176,20 @@ public class ReportBuilder {
         }
 
         //max total error gate
-        boolean maxVolumeExceeded = (maxEventVolume != 0) && (qualityGateReport.getTotalErrorCount() > maxEventVolume);
+        boolean maxVolumeExceeded = (config.getMaxErrorVolume() != 0) && (qualityGateReport.getTotalErrorCount() > config.getMaxErrorVolume());
 
         //max unique error gate
         long uniqueEventCount;
         boolean maxUniqueErrorsExceeded;
-        if (maxUniqueErrors != 0) {
+        if (config.getMaxUniqueErrors() != 0) {
             uniqueEventCount = qualityGateReport.getUniqueErrorCount();
-            maxUniqueErrorsExceeded = uniqueEventCount > maxUniqueErrors;
+            maxUniqueErrorsExceeded = uniqueEventCount > config.getMaxUniqueErrors();
         } else {
             uniqueEventCount = 0;
             maxUniqueErrorsExceeded = false;
         }
 
-        //new error gate
-        boolean newErrors = false;
-        if (qualityGateReport.getNewErrors() != null && qualityGateReport.getNewErrors().size() > 0) {
-            newErrors = true;
-            replaceSourceId(qualityGateReport.getNewErrors());
-        }
-
-        //resurfaced error gate
-        boolean resurfaced = false;
-        if (qualityGateReport.getResurfacedErrors() != null && qualityGateReport.getResurfacedErrors().size() > 0) {
-            resurfaced = true;
-            replaceSourceId(qualityGateReport.getResurfacedErrors());
-        }
-
-        //critical error gate
-        boolean critical = false;
-        if (qualityGateReport.getCriticalErrors() != null && qualityGateReport.getCriticalErrors().size() > 0) {
-            critical = true;
-            replaceSourceId(qualityGateReport.getCriticalErrors());
-        }
-
-        //top errors
-        if (qualityGateReport.getTopErrors() != null && qualityGateReport.getTopErrors().size() > 0) {
-            replaceSourceId(qualityGateReport.getTopErrors());
-        }
+        QualityGatesBesideRegressionProcess qualityGatesBesideRegressionProcess = new QualityGatesBesideRegressionProcess(qualityGateReport).invoke();
 
         boolean checkCritical = false;
         if (input.criticalExceptionTypes != null && input.criticalExceptionTypes.size() > 0) {
@@ -224,15 +199,13 @@ public class ReportBuilder {
         boolean unstable = (hasRegressions)
                 || (maxVolumeExceeded)
                 || (maxUniqueErrorsExceeded)
-                || (newErrors)
-                || (resurfaced)
-                || (critical);
+                || qualityGatesBesideRegressionProcess.isErrorsDetected();
 
         return new QualityReport(input, rateRegression, regressions,
                 qualityGateReport.getCriticalErrors(), qualityGateReport.getTopErrors(), qualityGateReport.getNewErrors(),
                 qualityGateReport.getResurfacedErrors(), qualityGateReport.getTotalErrorCount(),
-                qualityGateReport.getUniqueErrorCount(), unstable, newEvents, resurfacedEvents, checkCritical, checkMaxEventGate,
-                checkUniqueEventGate, runRegressions, maxEventVolume, maxUniqueErrors, markedUnstable);
+                qualityGateReport.getUniqueErrorCount(), unstable, config.isNewEvents(), config.isResurfacedErrors(), checkCritical, checkMaxEventGate,
+                checkUniqueEventGate, config.isRegressionPresent(), config.getMaxErrorVolume(), config.getMaxUniqueErrors(), config.isMarkUnstable());
     }
 
     // for each event, replace the source ID in the ARC link with 58 (which means TeamCity)
@@ -281,5 +254,42 @@ public class ReportBuilder {
         }
 
         return result;
+    }
+
+    private static class ReportVolume {
+        protected List<OOReportEvent> topEvents;
+        protected Collection<EventResult> filter;
+    }
+
+    private class QualityGatesBesideRegressionProcess {
+        private QualityGateReport qualityGateReport;
+        private boolean newErrors;
+        private boolean resurfaced;
+        private boolean critical;
+
+        public QualityGatesBesideRegressionProcess(QualityGateReport qualityGateReport) {
+            this.qualityGateReport = qualityGateReport;
+        }
+
+        public boolean isErrorsDetected() {
+            return  newErrors || resurfaced || critical;
+        }
+
+        public QualityGatesBesideRegressionProcess invoke() {
+            newErrors = processQualityGateErrors(qualityGateReport.getNewErrors());
+            resurfaced = processQualityGateErrors(qualityGateReport.getResurfacedErrors());
+            critical = processQualityGateErrors(qualityGateReport.getCriticalErrors());
+            processQualityGateErrors(qualityGateReport.getTopErrors());
+            return this;
+        }
+
+        private boolean processQualityGateErrors(List<OOReportEvent> events) {
+            boolean errorsExist = false;
+            if (events != null && events.size() > 0) {
+                errorsExist = true;
+                replaceSourceId(events);
+            }
+            return errorsExist;
+        }
     }
 }
