@@ -104,16 +104,32 @@ public class OverOpsConfiguration {
         return maxErrorVolume;
     }
 
+    public boolean isMaxErrorVolume() {
+        return getMaxErrorVolume() != 0;
+    }
+
     public void setMaxErrorVolume(Integer maxErrorVolume) {
         this.maxErrorVolume = maxErrorVolume;
+    }
+
+    public boolean checkIfMaxVolumeExceeded(long totalErrorsCount) {
+        return isMaxErrorVolume() && totalErrorsCount > getMaxErrorVolume();
     }
 
     public Integer getMaxUniqueErrors() {
         return maxUniqueErrors;
     }
 
+    public boolean isMaxUniqueErrors() {
+        return getMaxUniqueErrors() != 0;
+    }
+
     public void setMaxUniqueErrors(Integer maxUniqueErrors) {
         this.maxUniqueErrors = maxUniqueErrors;
+    }
+
+    public boolean checkIfMaxUniqueErrorsExceeded(long uniqueErrorCount) {
+        return isMaxUniqueErrors() && uniqueErrorCount > getMaxUniqueErrors();
     }
 
     public String getCriticalExceptionTypes() {

@@ -1,7 +1,7 @@
 package com.overops.plugins.model;
 
 import com.takipi.api.client.util.cicd.OOReportEvent;
-import com.takipi.api.client.util.regression.RateRegression;
+import com.takipi.api.client.util.cicd.QualityGateReport;
 import com.takipi.api.client.util.regression.RegressionInput;
 
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ public class QualityReport {
     private final List<OOReportEvent> allIssues;
     private final boolean unstable;
     private final RegressionInput input;
-    private final RateRegression regression;
     private final long eventVolume;
     private final int uniqueEventsCount;
     private final boolean checkNewGate;
@@ -31,47 +30,39 @@ public class QualityReport {
     private final Integer maxUniqueVolume;
     private final boolean markedUnstable;
 
-    public QualityReport(RegressionInput input, RateRegression regression,
-                         List<OOReportRegressedEvent> regressions, List<OOReportEvent> criticalErrors,
-                         List<OOReportEvent> topErrors, List<OOReportEvent> newIssues,
-                         List<OOReportEvent> resurfacedErrors, long eventVolume, int uniqueEventCounts, boolean unstable,
-                         boolean checkNewGate, boolean checkResurfacedGate, boolean checkCriticalGate, boolean checkVolumeGate,
-                         boolean checkUniqueGate, boolean checkRegressionGate, Integer maxEventVolume, Integer maxUniqueVolume, boolean markedUnstable) {
+    public QualityReport(RegressionInput input, List<OOReportRegressedEvent> regressions,
+                         QualityGateReport qualityGateReport, boolean unstable,
+                         OverOpsConfiguration config) {
 
         this.input = input;
-        this.regression = regression;
 
         this.regressions = regressions;
         this.allIssues = new ArrayList<OOReportEvent>();
-        this.newIssues = newIssues;
-        this.criticalErrors = criticalErrors;
-        this.topErrors = topErrors;
-        this.resurfacedErrors = resurfacedErrors;
+        this.newIssues = qualityGateReport.getNewErrors();
+        this.criticalErrors = qualityGateReport.getCriticalErrors();
+        this.topErrors = qualityGateReport.getTopErrors();
+        this.resurfacedErrors = qualityGateReport.getResurfacedErrors();
 
         if (regressions != null) {
             allIssues.addAll(regressions);
         }
 
-        this.eventVolume =  eventVolume;
-        this.uniqueEventsCount =  uniqueEventCounts;
+        this.eventVolume =  qualityGateReport.getTotalErrorCount();
+        this.uniqueEventsCount =  qualityGateReport.getUniqueErrorCount();
         this.unstable = unstable;
-        this.checkNewGate = checkNewGate;
-        this.checkResurfacedGate = checkResurfacedGate;
-        this.checkCriticalGate = checkCriticalGate;
-        this.checkVolumeGate = checkVolumeGate;
-        this.checkUniqueGate = checkUniqueGate;
-        this.checkRegressionGate = checkRegressionGate;
-        this.maxEventVolume = maxEventVolume;
-        this.maxUniqueVolume = maxUniqueVolume;
-        this.markedUnstable = markedUnstable;
+        this.checkNewGate = config.isNewEvents();
+        this.checkResurfacedGate = config.isResurfacedErrors();
+        this.checkCriticalGate = input.criticalExceptionTypes != null && input.criticalExceptionTypes.size() > 0;
+        this.checkVolumeGate = config.isMaxErrorVolume();
+        this.checkUniqueGate = config.isMaxUniqueErrors();
+        this.checkRegressionGate = config.isRegressionPresent();
+        this.maxEventVolume =  config.getMaxErrorVolume();
+        this.maxUniqueVolume = config.getMaxUniqueErrors();
+        this.markedUnstable = config.isMarkUnstable();
     }
 
     public RegressionInput getInput() {
         return input;
-    }
-
-    public RateRegression getRegression() {
-        return regression;
     }
 
     public List<OOReportEvent> getResurfacedErrors() {
