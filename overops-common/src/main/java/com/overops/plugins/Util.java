@@ -3,7 +3,6 @@ package com.overops.plugins;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
@@ -11,16 +10,6 @@ import java.util.Optional;
 public final class Util {
 
     private static ObjectMapper mapper = new ObjectMapper();
-
-    public static void close(final Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException ignore) {
-                // ignore
-            }
-        }
-    }
 
     public static <T> Optional<String> objectToString(T object) {
         try {

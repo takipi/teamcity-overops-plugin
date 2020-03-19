@@ -23,15 +23,15 @@ public class ReportUtils {
         result.setPassedNewErrorGate(getPassedNewErrorGate(report));
         result.setCheckNewEvents(getCheckNewEvents(report));
         result.setNewErrorSummary(getNewErrorSummary(report));
-        result.setNewEvents(getNewEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
+        result.setNewEvents(getNewEvents(report).stream().map(ReportEventModel::new).collect(Collectors.toList()));
         result.setPassedResurfacedErrorGate(getPassedResurfacedErrorGate(report));
         result.setCheckResurfacedEvents(getCheckResurfacedEvents(report));
         result.setResurfacedErrorSummary(getResurfacedErrorSummary(report));
-        result.setResurfacedEvents(getResurfacedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
+        result.setResurfacedEvents(getResurfacedEvents(report).stream().map(ReportEventModel::new).collect(Collectors.toList()));
         result.setCheckCriticalErrors(getCheckCriticalErrors(report));
         result.setPassedCriticalErrorGate(getPassedCriticalErrorGate(report));
         result.setCriticalErrorSummary(getCriticalErrorSummary(report));
-        result.setCriticalEvents(getCriticalEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
+        result.setCriticalEvents(getCriticalEvents(report).stream().map(ReportEventModel::new).collect(Collectors.toList()));
         result.setCheckTotalErrors(getCheckTotalErrors(report));
         result.setPassedTotalErrorGate(getPassedTotalErrorGate(report));
         result.setTotalErrorSummary(getTotalErrorSummary(report));
@@ -39,11 +39,11 @@ public class ReportUtils {
         result.setHasTopErrors(getHasTopErrors(report));
         result.setPassedUniqueErrorGate(getPassedUniqueErrorGate(report));
         result.setUniqueErrorSummary(getUniqueErrorSummary(report));
-        result.setTopEvents(getTopEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
+        result.setTopEvents(getTopEvents(report).stream().map(ReportEventModel::new).collect(Collectors.toList()));
         result.setRegressionSumarry(getRegressionSumarry(report));
         result.setCheckRegressedErrors(getCheckRegressedErrors(report));
         result.setPassedRegressedEvents(getPassedRegressedEvents(report));
-        result.setRegressedEvents(getRegressedEvents(report).stream().map(e -> new ReportEventModel(e.getARCLink(), e.getType(), e.getIntroducedBy(), e.getEventSummary(), e.getEventRate(), e.getHits(), e.getCalls(), e.getApplications())).collect(Collectors.toList()));
+        result.setRegressedEvents(getRegressedEvents(report).stream().map(ReportEventModel::new).collect(Collectors.toList()));
 
         result.setNewGateTotal(String.format(STRING_FORMAT, report.getNewIssues() != null ? report.getNewIssues().size() : 0));
         result.setResurfacedGateTotal(String.format(STRING_FORMAT, report.getResurfacedErrors() != null ? report.getResurfacedErrors().size() : 0));

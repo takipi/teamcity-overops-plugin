@@ -38,21 +38,18 @@ public class OverOpsRunType extends RunType {
     @Nullable
     @Override
     public PropertiesProcessor getRunnerPropertiesProcessor() {
-        return new PropertiesProcessor() {
-            @Override
-            public Collection<InvalidProperty> process(Map<String, String> map) {
-                List<InvalidProperty> result = new ArrayList<InvalidProperty>();
-                if(StringUtils.isEmpty(map.get("url"))) {
-                    result.add(new InvalidProperty("url", "OverOpsURL is required."));
-                }
-                if(StringUtils.isEmpty(map.get("envId"))) {
-                    result.add(new InvalidProperty("envId", "OverOps Environment ID."));
-                }
-                if(StringUtils.isEmpty(map.get("token"))) {
-                    result.add(new InvalidProperty("token", "OverOps API Token."));
-                }
-                return result;
+        return map -> {
+            List<InvalidProperty> result = new ArrayList<InvalidProperty>();
+            if(StringUtils.isEmpty(map.get("url"))) {
+                result.add(new InvalidProperty("url", "OverOpsURL is required."));
             }
+            if(StringUtils.isEmpty(map.get("envId"))) {
+                result.add(new InvalidProperty("envId", "OverOps Environment ID."));
+            }
+            if(StringUtils.isEmpty(map.get("token"))) {
+                result.add(new InvalidProperty("token", "OverOps API Token."));
+            }
+            return result;
         };
     }
 

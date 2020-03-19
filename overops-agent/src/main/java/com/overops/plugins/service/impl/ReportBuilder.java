@@ -206,6 +206,10 @@ public class ReportBuilder {
     private static class ReportVolume {
         protected List<OOReportEvent> topEvents;
         protected Collection<EventResult> filter;
+
+        public ReportVolume() {
+            this.topEvents = new ArrayList<>();;
+        }
     }
 
     private class QualityGatesBesideRegressionProcess {

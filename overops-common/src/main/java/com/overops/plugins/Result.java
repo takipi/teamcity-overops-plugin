@@ -1,10 +1,7 @@
 package com.overops.plugins;
 
 public class Result {
-    private boolean unstable;
-
-    public Result() {
-    }
+    private final boolean unstable;
 
     public Result(boolean unstable) {
         this.unstable = unstable;
@@ -12,10 +9,6 @@ public class Result {
 
     public boolean isUnstable() {
         return unstable;
-    }
-
-    public void setUnstable(boolean unstable) {
-        this.unstable = unstable;
     }
 
     @Override
