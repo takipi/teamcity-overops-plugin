@@ -55,18 +55,18 @@ public class SettingActionController extends BaseAjaxActionController implements
             Optional.ofNullable(settingService.getProjectByExternalId(request.getParameter(FIELD_PROJECT_ID)))
                     .filter(project -> Objects.nonNull(ajaxResponse))
                     .ifPresent(project -> {
-                GeneralSetting setting = settingService.getSetting(request.getParameter(FIELD_PROJECT_ID));
-                setting.setUrl(url);
-                setting.setToken(token);
-                setting.setEnvId(envId);
-                setting = settingService.updateSetting(setting, request.getParameter(FIELD_PROJECT_ID));
-                if (Objects.isNull(setting)) {
-                    ajaxResponse.setAttribute("status", "FAIL");
-                } else {
-                    ajaxResponse.setAttribute("status", "OK");
-                }
-                project.persist();
-            });
+                        GeneralSetting setting = settingService.getSetting(request.getParameter(FIELD_PROJECT_ID));
+                        setting.setUrl(url);
+                        setting.setToken(token);
+                        setting.setEnvId(envId);
+                        setting = settingService.updateSetting(setting, request.getParameter(FIELD_PROJECT_ID));
+                        if (Objects.isNull(setting)) {
+                            ajaxResponse.setAttribute("status", "FAIL");
+                        } else {
+                            ajaxResponse.setAttribute("status", "OK");
+                        }
+                        project.persist();
+                    });
         }
     }
 }

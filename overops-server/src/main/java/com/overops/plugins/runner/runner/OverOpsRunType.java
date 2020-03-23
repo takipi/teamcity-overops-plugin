@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OverOpsRunType extends RunType {
 
@@ -98,7 +99,6 @@ public class OverOpsRunType extends RunType {
     @NotNull
     @Override
     public String describeParameters(@NotNull Map<String, String> parameters) {
-        // LinkedHashMap preserves insertion order
         Map<String,String> qualityGates = new LinkedHashMap<String,String>();
 
         qualityGates.put("New", parameters.get(Constants.FIELD_NEW_EVENTS));
@@ -109,21 +109,16 @@ public class OverOpsRunType extends RunType {
         qualityGates.put("Increasing", parameters.get(Constants.FIELD_REGRESSIONS_ERROR));
 
         StringBuilder sb = new StringBuilder("Quality Gates: ");
-        String separator = ", ";
 
-        qualityGates.forEach((k,v) -> {
-          if(!StringUtils.isEmpty(v) && v.equals("true")) {
-            sb.append(k);
-            sb.append(separator);
-          }
-        });
+        String includedQualityGates = qualityGates.entrySet().stream()
+                .filter(entry -> !StringUtils.isEmpty(entry.getValue()) && entry.getValue().equals("true"))
+                .map(entry -> entry.getKey())
+                .collect(Collectors.joining(", "));
 
-        if (!sb.substring(sb.length() - 2, sb.length()).equals(separator)) {
-          // no gates enabled
-          sb.append("None");
+        if (StringUtils.isEmpty(includedQualityGates)) {
+            sb.append("None");
         } else {
-          // remove trailing separator
-          sb.replace(sb.length() - 2, sb.length(), "");
+            sb.append(includedQualityGates);
         }
 
         return sb.toString();
