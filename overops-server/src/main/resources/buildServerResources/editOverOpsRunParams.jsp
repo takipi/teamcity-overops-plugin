@@ -125,16 +125,6 @@
         </th>
         <td>
             <span class="smallNote">
-                Use this gate if you want to check for new errors in the current build.
-            </span>
-        </td>
-    </tr>
-
-    <tr class="checkNewErrors" >
-        <th class="noBorder"><label for="newEvents">Detect New Errors: </label></th>
-        <td>
-            <props:checkboxProperty name="newEvents" className="checkBoxField"/>
-            <span class="smallNote">
                 Check if the current build has new errors.
             </span>
         </td>
@@ -149,17 +139,6 @@
         </th>
         <td>
             <span class="smallNote">
-                Use this gate if you want to check for any errors that have resurfaced and are occurring 
-                in the current build after being marked as resolved in OverOps.
-            </span>
-        </td>
-    </tr>
-
-    <tr class="checkResurfacedErrors">
-        <th class="noBorder"><label for="resurfacedErrors">Detect Resurfaced Errors: </label></th>
-        <td>
-            <props:checkboxProperty name="resurfacedErrors" className="checkBoxField"/>
-            <span class="smallNote">
                 Check if the current build has any errors that have resurfaced since being marked as resolved in OverOps.
             </span>
         </td>
@@ -168,23 +147,14 @@
     <tr>
         <th class="noBorder">
             <label for="checkVolumeErrors">
-                <props:checkboxProperty name="checkVolumeErrors" className="checkBoxFiel commutator"/>
+                <props:checkboxProperty name="checkVolumeErrors" className="checkBoxField commutator"/>
                 Total Error Volume Gate:
             </label>
         </th>
-        <td>
-            <span class="smallNote">
-                Use this gate to limit the total number of allowable errors in the current build.
-            </span>
-        </td>
-    </tr>
-
-    <tr class="checkVolumeErrors">
-        <th class="noBorder"><label for="maxErrorVolume">Max Allowable Error Volume: </label></th>
-        <td>
+        <td class="checkVolumeErrors">
             <props:textProperty name="maxErrorVolume" className="longField"/>
             <span class="smallNote">
-                Set the max total error volume allowed.
+                Set the max total error count allowed.
             </span>
         </td>
     </tr>
@@ -196,16 +166,7 @@
                 Unique Error Volume Gate:
             </label>
         </th>
-        <td>
-            <span class="smallNote">
-                Use this gate to limit the number of allowable unique errors in the current build.
-            </span>
-        </td>
-    </tr>
-
-    <tr class="checkUniqueErrors">
-        <th class="noBorder"><label for="maxUniqueErrors">Max Allowable Unique Error Count: </label></th>
-        <td>
+        <td class="checkUniqueErrors">
             <props:textProperty name="maxUniqueErrors" className="longField"/>
             <span class="smallNote">
                 Set the max unique error count allowed.
@@ -220,113 +181,13 @@
                 Critical Exception Type(s) Gate:
             </label>
         </th>
-        <td>
-            <span class="smallNote">
-                Use this gate to detect specific critical errors in the current build.
-            </span>
-        </td>
-    </tr>
-
-    <tr class="checkCriticalErrors">
-        <th class="noBorder"><label for="criticalExceptionTypes">Detect Critical Exception Types: </label></th>
-        <td>
+        <td class="checkCriticalErrors">
             <props:textProperty name="criticalExceptionTypes" className="longField"/>
             <span class="smallNote">
                 A comma delimited list of exception types that are deemed as severe.
                 <p>Example: <code>NullPointerException,IndexOutOfBoundsException</code></p>
             </span>
         </td>
-    </tr>
-    <tr>
-        <th class="noBorder">
-            <label for="checkRegressionErrors">
-                <props:checkboxProperty name="checkRegressionErrors" className="checkBoxField commutator"/>
-                Increasing Errors Gate:
-            </label>
-        </th>
-        <td>
-            <span class="smallNote">
-                Use this gate to detect increasing error counts in your current build versus a given baseline.
-            </span>
-        </td>
-    </tr>
-
-    <tr class="checkRegressionErrors">
-        <th class="noBorder"><label for="activeTimespan">Active Time Window: </label></th>
-        <td>
-            <props:textProperty name="activeTimespan" className="longField"/>
-            <span class="smallNote">
-                The time window inspected to search for increasing errors.
-                Set to zero to use the Deployment Name.
-                Supported values are: <strong>d</strong> - day, <strong>h</strong> - hour, 
-                <strong>m</strong> - minute. Example: <code>12h</code>
-            </span>
-          </td>
-    </tr>
-
-    <tr class="checkRegressionErrors">
-        <th class="noBorder"><label for="baselineTimespan">Baseline Time Window: </label></th>
-        <td>
-            <props:textProperty name="baselineTimespan" className="longField"/>
-            <span class="smallNote">
-                The time window against which events in the active window are compared to test for increasing errors.
-                Supported values are: <strong>d</strong> - day, <strong>h</strong> - hour, <strong>m</strong> - minute.
-                Example: <code>7d</code>
-              </span>
-          </td>
-    </tr>
-    <tr class="checkRegressionErrors">
-        <th class="noBorder"><label for="minVolumeThreshold">Error Volume Threshold: </label></th>
-        <td>
-            <props:textProperty name="minVolumeThreshold" className="longField"/>
-            <span class="smallNote">
-                The minimal number of times an event must take place to fail the quality gate.
-              </span>
-          </td>
-    </tr>
-    <tr class="checkRegressionErrors">
-        <th class="noBorder"><label for="minErrorRateThreshold">Error Rate Threshold (0-1): </label></th>
-        <td>
-            <props:textProperty name="minErrorRateThreshold" className="longField"/>
-            <span class="smallNote">
-                The minimum rate at which event must take place to fail the quality gate. 
-                A rate of 0.1 means the events is allowed to take place &lt;= 10% of the time.
-            </span>
-          </td>
-    </tr>
-    <tr class="checkRegressionErrors">
-        <th class="noBorder"><label for="regressionDelta">Regression Delta (0-1): </label></th>
-        <td>
-            <props:textProperty name="regressionDelta" className="longField"/>
-            <span class="smallNote">
-                The change in percentage between an event's rate in the active time window compared to the 
-                baseline to be considered a increasing error. A rate of 0.1 means the events is allowed 
-                to take place &lt;= 10% of the time.
-            </span>
-          </td>
-    </tr>
-    <tr class="checkRegressionErrors">
-        <th class="noBorder"><label for="criticalRegressionDelta">Critical Regression Threshold (0-1): </label></th>
-        <td>
-            <props:textProperty name="criticalRegressionDelta" className="longField"/>
-            <span class="smallNote">
-                The change in percentage between an event's rate in the active time window compared to the 
-                baseline to be considered a critical increasing error. A rate of 0.1 means 
-                the events is allowed to take place &lt;= 10% of the time.
-            </span>
-          </td>
-    </tr>
-    <tr class="checkRegressionErrors">
-        <th class="noBorder"><label for="applySeasonality">Apply Seasonality: </label></th>
-        <td>
-            <props:checkboxProperty name="applySeasonality" className=""/>
-            <span class="smallNote">
-                If peaks have been seen in baseline window, then this would be considered normal 
-                and not an increasing error. Should the plugin identify an equal or matching peak in the 
-                baseline time window, or two peaks of greater than 50% of the volume seen in the active 
-                time window, the event will not be marked as an increasing error.
-            </span>
-          </td>
     </tr>
 </l:settingsGroup>
 <l:settingsGroup title="Advanced Settings" className="codeQualityOptions">
@@ -417,20 +278,21 @@
         jQuery('tr').find('.commutator').each(function(){
             if(!jQuery(this).is(':checked')) {
                 var id = jQuery(this).attr('id');
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(false)});
                 jQuery("."+id).find('.longField').each(function(){this.setValue("")});
-                jQuery("."+id).hide();
+                jQuery("."+id).children().css("visibility", "hidden");
             }
         });
         jQuery('.commutator').change(function(){
             var id = jQuery(this).attr('id');
-            if(jQuery(this).is(':checked')) {
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(true)});
-                jQuery("."+id).show();
+            var widget = jQuery(this);
+            if(widget.is(':checked')) {
+                jQuery("."+id).children().css("visibility", "");
+                if ((widget.attr("id") == "checkVolumeErrors") ||  (widget.attr("id") == "checkUniqueErrors")){
+                    jQuery("."+id).find('.longField').each(function(){this.setValue("1")});
+                }
             } else {
-                jQuery("."+id).find('.checkBoxField').each(function(){this.setValue(false)});
                 jQuery("."+id).find('.longField').each(function(){this.setValue("")});
-                jQuery("."+id).hide();
+                jQuery("."+id).children().css("visibility", "hidden");
             }
         });
     })
