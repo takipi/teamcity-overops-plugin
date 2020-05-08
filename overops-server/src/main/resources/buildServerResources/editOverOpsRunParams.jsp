@@ -102,6 +102,15 @@
           </td>
     </tr>
     <tr>
+        <th class="noBorder"><label for="showPassedGateEvents">Show Issues For Passed Gates: </label></th>
+        <td>
+            <props:checkboxProperty name="showPassedGateEvents" className="checkBoxField"/>
+            <span class="smallNote">
+                Display event list even when quality gate passes.
+            </span>
+          </td>
+    </tr>
+    <tr>
         <th class="noBorder"><label for="printTopIssues">Show Top Issues: </label></th>
         <td>
             <props:textProperty name="printTopIssues" className="longField"/>

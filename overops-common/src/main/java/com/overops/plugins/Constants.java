@@ -31,6 +31,7 @@ public class Constants {
     public static final String FIELD_UNIQUE_ERRORS = "checkUniqueErrors";
     public static final String FIELD_CRITICAL_ERRORS = "checkCriticalErrors";
     public static final String FIELD_MARK_UNSTABLE = "markUnstable";
+    public static final String FIELD_SHOW_PASSED_GATE_EVENTS = "showPassedGateEvents";
     public static final String FIELD_PRINT_TOP_ISSUE = "printTopIssues";
     public static final String FIELD_MAX_ERROR_VOLUME = "maxErrorVolume";
     public static final String FIELD_MAX_UNIQUE_ERRORS = "maxUniqueErrors";

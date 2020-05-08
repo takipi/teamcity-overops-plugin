@@ -1,5 +1,6 @@
 package com.overops.plugins.runner;
 
+import com.overops.plugins.Constants;
 import com.overops.plugins.Result;
 import com.overops.plugins.Util;
 import com.overops.plugins.service.OverOpsService;
@@ -49,7 +50,7 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
     public BuildFinishedStatus call() throws Exception {
         QualityReport reportModel = overOpsService.perform(context, logger);
 
-        publishReportArtifact(reportModel);
+        publishReportArtifact(reportModel, Boolean.parseBoolean(context.getRunnerParameters().getOrDefault(Constants.FIELD_SHOW_PASSED_GATE_EVENTS, "false")));
 
         logger.message(reportModel.getStatusMsg());
 
@@ -80,14 +81,14 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
         artifactsWatcher.addNewArtifactsPath(file + "=>" + RUNNER_DISPLAY_NAME);
     }
 
-    private void publishReportArtifact(QualityReport report) {
+    private void publishReportArtifact(QualityReport report, boolean showPassedGateEvents) {
         File buildDirectory = new File(agentRunningBuild.getBuildTempDirectory() + "/" +
                 agentRunningBuild.getProjectName() + "/" + agentRunningBuild.getBuildTypeName() + "/" +
                 agentRunningBuild.getBuildNumber() + "/" + RUNNER_DISPLAY_NAME);
         File file = new File(buildDirectory, OV_REPORTS_FILE_RESULT);
         try {
             FileUtils.touch(file);
-            Util.objectToString(report.getHtmlParts()).ifPresent(o -> appendStringToFile(file, o));
+            Util.objectToString(report.getHtmlParts(showPassedGateEvents)).ifPresent(o -> appendStringToFile(file, o));
         } catch (IOException e) {
             logger.error("Cannot create result artifact: " + e.getMessage());
         }
