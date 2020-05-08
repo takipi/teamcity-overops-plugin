@@ -18,7 +18,7 @@
 
     <properties>
         <teamcity-version>2018.2</teamcity-version>
-        <version.takipi>2.31.0</version.takipi>
+        <version.takipi>2.33.0</version.takipi>
     </properties>
     <repositories>
         <repository>
@@ -54,6 +54,12 @@
             <artifactId>api-client-util</artifactId>
             <version>${version.takipi}</version>
         </dependency>
+        <dependency>
+            <groupId>com.takipi</groupId>
+            <artifactId>report-service</artifactId>
+            <version>${version.takipi}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

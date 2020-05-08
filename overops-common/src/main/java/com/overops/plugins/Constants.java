@@ -30,18 +30,12 @@ public class Constants {
     public static final String FIELD_VOLUME_ERRORS = "checkVolumeErrors";
     public static final String FIELD_UNIQUE_ERRORS = "checkUniqueErrors";
     public static final String FIELD_CRITICAL_ERRORS = "checkCriticalErrors";
-    public static final String FIELD_REGRESSIONS_ERROR = "checkRegressionErrors";
     public static final String FIELD_MARK_UNSTABLE = "markUnstable";
+    public static final String FIELD_SHOW_PASSED_GATE_EVENTS = "showPassedGateEvents";
     public static final String FIELD_PRINT_TOP_ISSUE = "printTopIssues";
-    public static final String FIELD_NEW_EVENTS = "newEvents";
-    public static final String FIELD_RESURFACED_ERRORS = "resurfacedErrors";
     public static final String FIELD_MAX_ERROR_VOLUME = "maxErrorVolume";
     public static final String FIELD_MAX_UNIQUE_ERRORS = "maxUniqueErrors";
     public static final String FIELD_MIN_VOLUME_THRESHOLD = "minVolumeThreshold";
-    public static final String FIELD_MIN_ERROR_RATE_THRESHOLD = "minErrorRateThreshold";
-    public static final String FIELD_REGRESSION_DELTA = "regressionDelta";
-    public static final String FIELD_CRITICAL_REGRESSION_DELTA = "criticalRegressionDelta";
-    public static final String FIELD_APPLY_SEASONALITY = "applySeasonality";
     public static final String FIELD_DEBUG = "debug";
 
     public static final String DEFAULT_APP_NAME = "%system.teamcity.projectName%";

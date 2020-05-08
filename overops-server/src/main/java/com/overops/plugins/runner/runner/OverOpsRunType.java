@@ -81,19 +81,12 @@ public class OverOpsRunType extends RunType {
         map.put(Constants.FIELD_VOLUME_ERRORS, Constants.DEFAULT_VOLUME_ERRORS);
         map.put(Constants.FIELD_UNIQUE_ERRORS, Constants.DEFAULT_UNIQUE_ERRORS);
         map.put(Constants.FIELD_CRITICAL_ERRORS, Constants.DEFAULT_CRITICAL_ERRORS);
-        map.put(Constants.FIELD_REGRESSIONS_ERROR, Constants.DEFAULT_REGRESSIONS_ERROR);
         map.put(Constants.FIELD_MARK_UNSTABLE, Constants.DEFAULT_MARK_UNSTABLE);
         map.put(Constants.FIELD_PRINT_TOP_ISSUE, Constants.DEFAULT_PRINT_TOP_ISSUE);
 
-        map.put(Constants.FIELD_NEW_EVENTS, Constants.DEFAULT_NEW_EVENTS);
-        map.put(Constants.FIELD_RESURFACED_ERRORS, Constants.DEFAULT_RESURFACED_ERRORS);
         map.put(Constants.FIELD_MAX_ERROR_VOLUME, Constants.DEFAULT_MAX_ERROR_VOLUME);
         map.put(Constants.FIELD_MAX_UNIQUE_ERRORS, Constants.DEFAULT_MAX_UNIQUE_ERRORS);
         map.put(Constants.FIELD_MIN_VOLUME_THRESHOLD, Constants.DEFAULT_MIN_VOLUME_THRESHOLD);
-        map.put(Constants.FIELD_MIN_ERROR_RATE_THRESHOLD, Constants.DEFAULT_MIN_ERROR_RATE_THRESHOLD);
-        map.put(Constants.FIELD_REGRESSION_DELTA, Constants.DEFAULT_REGRESSION_DELTA);
-        map.put(Constants.FIELD_CRITICAL_REGRESSION_DELTA, Constants.DEFAULT_CRITICAL_REGRESSION_DELTA);
-        map.put(Constants.FIELD_APPLY_SEASONALITY, Constants.DEFAULT_APPLY_SEASONALITY);
         map.put(Constants.FIELD_DEBUG, Constants.DEFAULT_DEBUG);
         return map;
     }
@@ -104,12 +97,9 @@ public class OverOpsRunType extends RunType {
         // LinkedHashMap preserves insertion order
         Map<String,String> qualityGates = new LinkedHashMap<String,String>();
 
-        qualityGates.put("New", parameters.get(Constants.FIELD_NEW_EVENTS));
-        qualityGates.put("Resurfaced", parameters.get(Constants.FIELD_RESURFACED_ERRORS));
         qualityGates.put("Total", parameters.get(Constants.FIELD_VOLUME_ERRORS));
         qualityGates.put("Unique", parameters.get(Constants.FIELD_UNIQUE_ERRORS));
         qualityGates.put("Critical", parameters.get(Constants.FIELD_CRITICAL_ERRORS));
-        qualityGates.put("Increasing", parameters.get(Constants.FIELD_REGRESSIONS_ERROR));
 
         StringBuilder sb = new StringBuilder("Quality Gates: ");
         String separator = ", ";

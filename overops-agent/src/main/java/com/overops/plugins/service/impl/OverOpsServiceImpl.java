@@ -1,65 +1,95 @@
 package com.overops.plugins.service.impl;
 
-import com.overops.plugins.model.QueryOverOps;
-import com.overops.plugins.model.Setting;
+import com.overops.plugins.Constants;
 import com.overops.plugins.service.OverOpsService;
-import com.takipi.api.client.RemoteApiClient;
-import com.takipi.api.client.data.view.SummarizedView;
-import com.takipi.api.client.observe.Observer;
-import com.takipi.api.client.util.regression.RegressionInput;
-import com.takipi.api.client.util.view.ViewUtil;
+import com.overops.report.service.QualityReportParams;
+import com.overops.report.service.ReportService;
+import com.overops.report.service.ReportService.Requestor;
+import com.overops.report.service.model.QualityReport;
+import com.overops.report.service.model.QualityReportExceptionDetails;
 import jetbrains.buildServer.agent.BuildProgressLogger;
+import jetbrains.buildServer.agent.BuildRunnerContext;
+
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class OverOpsServiceImpl implements OverOpsService {
-    private static final String SEPERATOR = ",";
-    private boolean runRegressions = false;
 
     @Override
-    public ReportBuilder.QualityReport perform(Setting setting, QueryOverOps queryOverOps, BuildProgressLogger logger) throws IOException, InterruptedException {
-        PrintStream printStream;
-        if (convertToMinutes(queryOverOps.getBaselineTimespan()) > 0) {
-            runRegressions = true;
+    public QualityReport perform(BuildRunnerContext context, BuildProgressLogger logger) {
+        String endPoint = context.getRunnerParameters().get(Constants.SETTING_URL);
+        String apiKey = context.getRunnerParameters().get(Constants.SETTING_TOKEN);
+        boolean debug = Boolean.parseBoolean(context.getRunnerParameters().getOrDefault("debug", "false"));
+        PrintStream printStream = debug ? new TeamCityPrintWriter(System.out, logger) : null;    
+
+        QualityReportParams query = getQualityReportParams(context.getRunnerParameters());
+
+        QualityReport reportModel = null;
+        ReportService reportService = new ReportService();
+        try {
+            validateInputs(endPoint, apiKey, query, printStream);
+            reportModel = reportService.runQualityReport(endPoint, apiKey, query, Requestor.TEAM_CITY, printStream, debug);
+        } catch (Exception exception) {
+            reportModel = new QualityReport();
+
+            QualityReportExceptionDetails exceptionDetails = new QualityReportExceptionDetails();
+            exceptionDetails.setExceptionMessage(exception.getMessage());
+
+            List<StackTraceElement> stackElements = Arrays.asList(exception.getStackTrace());
+            List<String> stackTrace = new ArrayList<>();
+            stackTrace.add(exception.getClass().getName());
+            stackTrace.addAll(stackElements.stream().map(stack -> stack.toString()).collect(Collectors.toList()));
+            exceptionDetails.setStackTrace(stackTrace.toArray(new String[stackTrace.size()]));
+
+            reportModel.setExceptionDetails(exceptionDetails);
         }
-        if (queryOverOps.isDebug()) {
-            printStream = new TeamCityPrintWriter(System.out, logger);
+
+        return reportModel;
+
+    }
+
+    private QualityReportParams getQualityReportParams(Map<String, String> params) {
+        QualityReportParams queryOverOps = new QualityReportParams();
+        queryOverOps.setApplicationName(params.get(Constants.APP_NAME));
+        queryOverOps.setDeploymentName(params.get(Constants.DEPLOYMENT_NAME));
+        queryOverOps.setServiceId(params.get(Constants.SETTING_ENV_ID));
+        queryOverOps.setRegexFilter(params.getOrDefault("regexFilter", ""));
+        queryOverOps.setMarkUnstable(Boolean.parseBoolean(params.getOrDefault(Constants.FIELD_MARK_UNSTABLE, "false")));
+        queryOverOps.setPrintTopIssues(Integer.parseInt(params.getOrDefault(Constants.FIELD_PRINT_TOP_ISSUE, "5")));
+        queryOverOps.setNewEvents(Boolean.parseBoolean(params.getOrDefault(Constants.FIELD_CHECK_NEW_ERROR, "false")));
+        queryOverOps.setResurfacedErrors(Boolean.parseBoolean(params.getOrDefault(Constants.FIELD_CHECK_RESURFACED_ERRORS, "false")));
+        if (Boolean.parseBoolean(params.getOrDefault(Constants.FIELD_VOLUME_ERRORS, "false"))) {
+            queryOverOps.setMaxErrorVolume(Integer.parseInt(params.getOrDefault(Constants.FIELD_MAX_ERROR_VOLUME, "1")));
         } else {
-            printStream = null;
+            queryOverOps.setMaxErrorVolume(0);
+        }
+        if (Boolean.parseBoolean(params.getOrDefault(Constants.FIELD_UNIQUE_ERRORS, "false"))) {
+            queryOverOps.setMaxUniqueErrors(Integer.parseInt(params.getOrDefault(Constants.FIELD_MAX_UNIQUE_ERRORS, "1")));
+        } else {
+            queryOverOps.setMaxUniqueErrors(0);
+        }
+        if (Boolean.parseBoolean(params.getOrDefault(Constants.FIELD_CRITICAL_ERRORS, "false"))) {
+            queryOverOps.setCriticalExceptionTypes(params.getOrDefault("criticalExceptionTypes", ""));
+        } else {
+            queryOverOps.setCriticalExceptionTypes("");
         }
 
-        pauseForTheCause(printStream);
+        queryOverOps.setActiveTimespan("0");
+        queryOverOps.setBaselineTimespan("0");
+        queryOverOps.setMinVolumeThreshold(0);
+        queryOverOps.setMinErrorRateThreshold(0);
+        queryOverOps.setRegressionDelta(0);
+        queryOverOps.setCriticalRegressionDelta(0);
+        queryOverOps.setApplySeasonality(false);
 
-        validateInputs(setting, queryOverOps, printStream);
-
-        RemoteApiClient apiClient = (RemoteApiClient) RemoteApiClient.newBuilder().setHostname(setting.getOverOpsURL()).setApiKey(setting.getOverOpsAPIKey()).build();
-
-        if (Objects.nonNull(printStream) && (queryOverOps.isDebug())) {
-            apiClient.addObserver(new ApiClientObserver(printStream, queryOverOps.isDebug()));
-        }
-
-        SummarizedView allEventsView = ViewUtil.getServiceViewByName(apiClient, setting.getOverOpsSID().toUpperCase(), "All Events");
-
-        if (Objects.isNull(allEventsView)) {
-            if(Objects.nonNull(printStream)) {
-                printStream.println("Could not acquire ID for 'All Events'. Please check connection to " + setting.getOverOpsURL());
-            }
-            throw new IllegalStateException(
-                    "Could not acquire ID for 'All Events'. Please check connection to " + setting.getOverOpsURL());
-        }
-
-        RegressionInput input = setupRegressionData(setting, queryOverOps, allEventsView, printStream);
-        return ReportBuilder.execute(apiClient, input, queryOverOps.getMaxErrorVolume(), queryOverOps.getMaxUniqueErrors(),
-                queryOverOps.getPrintTopIssues(), queryOverOps.getRegexFilter(), queryOverOps.isNewEvents(), queryOverOps.isResurfacedErrors(),
-                runRegressions, queryOverOps.isMarkUnstable(), printStream, queryOverOps.isDebug());
-
+        return queryOverOps;
     }
 
     //sleep to ensure all data is in OverOps
@@ -76,10 +106,7 @@ public class OverOpsServiceImpl implements OverOpsService {
         }
     }
 
-    private void validateInputs (Setting setting, QueryOverOps queryOverOps, PrintStream printStream) {
-        String apiHost = setting.getOverOpsURL();
-        String apiKey = setting.getOverOpsAPIKey();
-
+    private void validateInputs (String apiHost, String apiKey, QualityReportParams queryOverOps, PrintStream printStream) {
         if (StringUtils.isEmpty(apiHost)) {
             throw new IllegalArgumentException("Missing host name");
         }
@@ -88,55 +115,26 @@ public class OverOpsServiceImpl implements OverOpsService {
             throw new IllegalArgumentException("Missing api key");
         }
 
-        //validate active and baseline time window
-        if (queryOverOps.getCheckRegressionErrors()) {
-            if (!"0".equalsIgnoreCase(queryOverOps.getActiveTimespan())) {
-                if (convertToMinutes(queryOverOps.getActiveTimespan()) == 0) {
+        if (!"0".equalsIgnoreCase(queryOverOps.getActiveTimespan())) {
+            if (convertToMinutes(queryOverOps.getActiveTimespan()) == 0) {
+                if (printStream != null) {
                     printStream.println("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() +  " is not properly formated. See help for format instructions.");
-                    throw new IllegalArgumentException("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() +  " is not properly formated. See help for format instructions.");
                 }
+                throw new IllegalArgumentException("For Increasing Error Gate, the active timewindow currently set to: " + queryOverOps.getActiveTimespan() +  " is not properly formated. See help for format instructions.");
             }
-            if (!"0".equalsIgnoreCase(queryOverOps.getBaselineTimespan())) {
-                if (convertToMinutes(queryOverOps.getBaselineTimespan()) == 0) {
+        }
+        if (!"0".equalsIgnoreCase(queryOverOps.getBaselineTimespan())) {
+            if (convertToMinutes(queryOverOps.getBaselineTimespan()) == 0) {
+                if (printStream != null) {
                     printStream.println("For Increasing Error Gate, the baseline timewindow currently set to: " + queryOverOps.getBaselineTimespan() + " cannot be zero or is improperly formated. See help for format instructions.");
-                    throw new IllegalArgumentException("For Increasing Error Gate, the baseline timewindow currently set to: " + queryOverOps.getBaselineTimespan() + " cannot be zero or is improperly formated. See help for format instructions.");
                 }
+                throw new IllegalArgumentException("For Increasing Error Gate, the baseline timewindow currently set to: " + queryOverOps.getBaselineTimespan() + " cannot be zero or is improperly formated. See help for format instructions.");
             }
         }
 
-
-        if (StringUtils.isEmpty(setting.getOverOpsSID())) {
+        if (StringUtils.isEmpty(queryOverOps.getServiceId())) {
             throw new IllegalArgumentException("Missing environment Id");
         }
-
-    }
-
-    private RegressionInput setupRegressionData(Setting setting, QueryOverOps queryOverOps, SummarizedView allEventsView, PrintStream printStream)
-            throws InterruptedException, IOException {
-
-        RegressionInput input = new RegressionInput();
-        input.serviceId = setting.getOverOpsSID();
-        input.viewId = allEventsView.id;
-        input.applictations = parseArrayString(queryOverOps.getApplicationName(), printStream, "Application Name");
-        input.deployments = parseArrayString(queryOverOps.getDeploymentName(), printStream, "Deployment Name");
-        input.criticalExceptionTypes = parseArrayString(queryOverOps.getCriticalExceptionTypes(), printStream,
-                "Critical Exception Types");
-
-        if (runRegressions) {
-            input.activeTimespan = convertToMinutes(queryOverOps.getActiveTimespan());
-            input.baselineTime = queryOverOps.getBaselineTimespan();
-            input.baselineTimespan = convertToMinutes(queryOverOps.getBaselineTimespan());
-            input.minVolumeThreshold = queryOverOps.getMinVolumeThreshold();
-            input.minErrorRateThreshold = queryOverOps.getMinErrorRateThreshold();
-            input.regressionDelta = queryOverOps.getRegressionDelta();
-            input.criticalRegressionDelta = queryOverOps.getCriticalRegressionDelta();
-            input.applySeasonality = queryOverOps.isApplySeasonality();
-            input.validate();
-        }
-
-        printInputs(queryOverOps, printStream, input);
-
-        return input;
     }
 
     private int convertToMinutes(String timeWindow) {
@@ -156,64 +154,5 @@ public class OverOpsServiceImpl implements OverOpsService {
         }
 
         return 0;
-    }
-
-    private static Collection<String> parseArrayString(String value, PrintStream printStream, String name) {
-        if (StringUtils.isEmpty(value)) {
-            return Collections.emptySet();
-        }
-
-        return Arrays.asList(value.trim().split(Pattern.quote(SEPERATOR)));
-    }
-
-    private void printInputs(QueryOverOps queryOverOps, PrintStream printStream, RegressionInput input) {
-
-        if (Objects.nonNull(printStream)) {
-            printStream.println(input);
-
-            printStream.println("Max unique errors  = " + queryOverOps.getMaxUniqueErrors());
-            printStream.println("Max error volume  = " + queryOverOps.getMaxErrorVolume());
-            printStream.println("Check new errors  = " + queryOverOps.isNewEvents());
-            printStream.println("Check resurfaced errors  = " + queryOverOps.isResurfacedErrors());
-
-            String regexPrint;
-
-            if (Objects.nonNull(queryOverOps.getRegexFilter())) {
-                regexPrint = queryOverOps.getRegexFilter();
-            } else {
-                regexPrint = "";
-            }
-
-            printStream.println("Regex filter  = " + regexPrint);
-        }
-    }
-
-    protected static class ApiClientObserver implements Observer {
-
-        private final PrintStream printStream;
-        private final boolean verbose;
-
-        public ApiClientObserver(PrintStream printStream, boolean verbose) {
-            this.printStream = printStream;
-            this.verbose = verbose;
-        }
-
-        @Override
-        public void observe(Operation operation, String url, String request, String response, int responseCode, long time) {
-            StringBuilder output = new StringBuilder();
-
-            output.append(String.valueOf(operation));
-            output.append(" took ");
-            output.append(time / 1000);
-            output.append("ms for ");
-            output.append(url);
-
-            if (verbose) {
-                output.append(". Response: ");
-                output.append(response);
-            }
-
-            printStream.println(output.toString());
-        }
     }
 }
