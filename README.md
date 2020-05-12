@@ -44,7 +44,7 @@ The OverOps REST API token to use for authentication. This can be obtained from 
 
 ### Deployment Name
 
-Deployment Name as specified in OverOps or use TeamCity environment variables.
+*(Optional)* Deployment Name as specified in OverOps or use TeamCity environment variables.
 
 **Example:** `%build.number%` or `%system.teamcity.projectName%-%build.number%`
 
@@ -57,6 +57,10 @@ Filter out specific event types from the OverOps Quality Report. Event types inc
 ### Mark Build Unstable
 
 If checked the build will be marked **failure** if any quality gate did not pass.
+
+### Show Issues For Passed Gates
+
+If checked the report will show the event list for total and unique gates even when the quality gate passes.
 
 ### Show Top Issues
 
@@ -83,50 +87,6 @@ Set the max unique error volume allowed.
 A comma delimited list of exception types that are deemed as severe.
 
 **Example:** `NullPointerException,IndexOutOfBoundsException`
-
-### Increasing Errors Gate
-
-Detect increasing error counts in your current build versus a given baseline.
-
-#### Combines the following parameters
-
-* Error Volume Threshold
-* Error Rate Threshold
-* Regression Delta
-* Critical Regression Threshold
-* Apply Seasonality
-
-### Active Time Window
-
-The time window inspected to search for increasing errors. Set to zero to use the Deployment Name. Supported values are: **d** - day, **h** - hour, **m** - minute.
-
-**Example:** `12h`
-
-### Baseline Time Window (d - day, h - hour, m - minute)
-
-The time window against which events in the active window are compared to test for increasing errors. Supported values are: **d** - day, **h** - hour, **m** - minute.
-
-**Example:** `7d`
-
-### Event Volume Threshold
-
-The minimal number of times an event must take place to fail the quality gate.
-
-### Event Rate Threshold (0-1)
-
-The minimum rate at which event must take place to fail the quality gate. A rate of 0.1 means the events is allowed to take place <= 10% of the time.
-
-### Regression Delta (0-1)
-
-The change in percentage between an event's rate in the active time window compared to the baseline to be considered a increasing error. A rate of 0.1 means the events is allowed to take place <= 10% of the time.
-
-### Critical Regression Threshold (0-1)
-
-The change in percentage between an event's rate in the active time window compared to the baseline to be considered a critical increasing error. A rate of 0.1 means the events is allowed to take place <= 10% of the time.
-
-### Apply Seasonality
-
-If peaks have been seen in baseline window, then this would be considered normal and not an increasing error. Should the plugin identify an equal or matching peak in the baseline time window, or two peaks of greater than 50% of the volume seen in the active time window, the event will not be marked as an increasing error.
 
 ### Debug Mode
 

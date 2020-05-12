@@ -3,7 +3,8 @@ package com.overops.plugins.runner.manager.extension;
 import com.overops.plugins.Constants;
 
 import com.overops.plugins.Util;
-import com.overops.plugins.model.OverOpsReportModel;
+import com.overops.report.service.model.HtmlParts;
+
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.artifacts.BuildArtifact;
@@ -31,9 +32,8 @@ public class BuildResultTab extends ViewLogTab {
         BuildArtifact artifact = ReportTabUtil.getArtifact(build, Constants.RUNNER_DISPLAY_NAME + "/" + Constants.OV_REPORTS_FILE_RESULT);
         Optional.ofNullable(artifact).ifPresent(a -> {
             try {
-                String result = new BufferedReader(new InputStreamReader(artifact.getInputStream()))
-                        .lines().collect(Collectors.joining("\n"));
-                OverOpsReportModel report = Util.stringToObject(result, OverOpsReportModel.class);
+                String result = new BufferedReader(new InputStreamReader(artifact.getInputStream())).lines().collect(Collectors.joining("\n"));
+                        HtmlParts report = Util.stringToObject(result, HtmlParts.class);
                 model.put("result", report);
             } catch (IOException e) {
                 System.err.println(e.getMessage());

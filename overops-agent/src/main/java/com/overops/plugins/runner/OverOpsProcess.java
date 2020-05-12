@@ -1,13 +1,12 @@
 package com.overops.plugins.runner;
 
+import com.overops.plugins.Constants;
 import com.overops.plugins.Result;
 import com.overops.plugins.Util;
-import com.overops.plugins.model.OverOpsReportModel;
-import com.overops.plugins.model.QueryOverOps;
-import com.overops.plugins.model.Setting;
 import com.overops.plugins.service.OverOpsService;
-import com.overops.plugins.service.impl.ReportBuilder;
-import com.overops.plugins.utils.ReportUtils;
+import com.overops.report.service.model.QualityReport;
+import com.overops.report.service.model.QualityReport.ReportStatus;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,32 +48,17 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
 
     @Override
     public BuildFinishedStatus call() throws Exception {
+        QualityReport reportModel = overOpsService.perform(context, logger);
 
-        Setting setting = new Setting(context.getRunnerParameters().get(SETTING_URL),
-            context.getRunnerParameters().get(SETTING_ENV_ID), context.getRunnerParameters().get(SETTING_TOKEN));
+        publishReportArtifact(reportModel, Boolean.parseBoolean(context.getRunnerParameters().getOrDefault(Constants.FIELD_SHOW_PASSED_GATE_EVENTS, "false")));
 
-        QueryOverOps params = QueryOverOps.mapToObject(context.getRunnerParameters());
-        params.setServiceId(setting.getOverOpsSID());
+        logger.message(reportModel.getStatusMsg());
 
-        OverOpsReportModel reportModel = null;
-
-        try {
-            ReportBuilder.QualityReport report = overOpsService.perform(setting, params, logger);
-            reportModel = ReportUtils.copyResult(report);
-        } catch (Exception exception) {
-            reportModel = ReportUtils.exceptionResult(exception);
-            logger.error("OverOps encountered an exception");
-        }
-
-        publishReportArtifact(reportModel);
-
-        logger.message(reportModel.getSummary());
-
-        if (reportModel.getException() != null) {
-            return params.isErrorSuccess() ? BuildFinishedStatus.FINISHED_SUCCESS : BuildFinishedStatus.INTERRUPTED;
+        if (reportModel.getExceptionDetails() != null) {
+            return Boolean.parseBoolean(context.getRunnerParameters().getOrDefault("errorSuccess", "false")) ? BuildFinishedStatus.FINISHED_SUCCESS : BuildFinishedStatus.INTERRUPTED;
         } else {
-            publishArtifacts(reportModel.isUnstable());
-            if (reportModel.isUnstable() && reportModel.isMarkedUnstable()) {
+            publishArtifacts((reportModel.getStatusCode() == ReportStatus.FAILED) || (reportModel.getStatusCode() == ReportStatus.WARNING));
+            if (reportModel.getStatusCode() == ReportStatus.FAILED) {
                 return BuildFinishedStatus.FINISHED_FAILED;
             }
         }
@@ -97,14 +81,14 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
         artifactsWatcher.addNewArtifactsPath(file + "=>" + RUNNER_DISPLAY_NAME);
     }
 
-    private void publishReportArtifact(OverOpsReportModel report) {
+    private void publishReportArtifact(QualityReport report, boolean showPassedGateEvents) {
         File buildDirectory = new File(agentRunningBuild.getBuildTempDirectory() + "/" +
                 agentRunningBuild.getProjectName() + "/" + agentRunningBuild.getBuildTypeName() + "/" +
                 agentRunningBuild.getBuildNumber() + "/" + RUNNER_DISPLAY_NAME);
         File file = new File(buildDirectory, OV_REPORTS_FILE_RESULT);
         try {
             FileUtils.touch(file);
-            Util.objectToString(report).ifPresent(o -> appendStringToFile(file, o));
+            Util.objectToString(report.getHtmlParts(showPassedGateEvents)).ifPresent(o -> appendStringToFile(file, o));
         } catch (IOException e) {
             logger.error("Cannot create result artifact: " + e.getMessage());
         }
