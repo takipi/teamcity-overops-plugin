@@ -61,7 +61,7 @@
                         <token>@VendorURL@</token>
                         <value>${teamcity.teamcity.plugin.vendorUrl}</value>
                     </replacement>
-                </replacements>                        
+                </replacements>
             </configuration>
         </plugin>
         <plugin>
