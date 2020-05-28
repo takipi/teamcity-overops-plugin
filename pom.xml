@@ -53,11 +53,23 @@
             <groupId>com.takipi</groupId>
             <artifactId>api-client-util</artifactId>
             <version>${version.takipi}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.takipi</groupId>
             <artifactId>report-service</artifactId>
             <version>${version.takipi}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
