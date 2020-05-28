@@ -51,14 +51,9 @@ public class OverOpsProcess implements Callable<BuildFinishedStatus> {
         QualityReport reportModel = overOpsService.perform(context, logger);
 
         publishReportArtifact(reportModel, Boolean.parseBoolean(context.getRunnerParameters().getOrDefault(Constants.FIELD_SHOW_PASSED_GATE_EVENTS, "false")));
-
-        logger.message(reportModel.getStatusMsg());
-
-        if (reportModel.getExceptionDetails() != null) {
-            return Boolean.parseBoolean(context.getRunnerParameters().getOrDefault("errorSuccess", "false")) ? BuildFinishedStatus.FINISHED_SUCCESS : BuildFinishedStatus.INTERRUPTED;
-        } else {
-            publishArtifacts((reportModel.getStatusCode() == ReportStatus.FAILED) || (reportModel.getStatusCode() == ReportStatus.WARNING));
-            if (reportModel.getStatusCode() == ReportStatus.FAILED) {
+        publishArtifacts((reportModel.getStatusCode() == ReportStatus.FAILED) || (reportModel.getStatusCode() == ReportStatus.WARNING));
+        if (reportModel.getStatusCode() == ReportStatus.FAILED) {
+            if ((reportModel.getExceptionDetails() == null) || !Boolean.parseBoolean(context.getRunnerParameters().getOrDefault("errorSuccess", "false"))) {
                 return BuildFinishedStatus.FINISHED_FAILED;
             }
         }
