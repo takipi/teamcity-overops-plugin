@@ -10,6 +10,7 @@ public class Constants {
     public static final String GENERAL_SETTING_TAB_TITLE = "OverOps Settings";
 
     public static final String SETTING_URL = "url";
+    public static final String SETTING_APP_URL = "appUrl";
     public static final String SETTING_ENV_ID = "envId";
     public static final String SETTING_TOKEN = "token";
 
@@ -31,6 +32,7 @@ public class Constants {
     public static final String FIELD_UNIQUE_ERRORS = "checkUniqueErrors";
     public static final String FIELD_CRITICAL_ERRORS = "checkCriticalErrors";
     public static final String FIELD_MARK_UNSTABLE = "markUnstable";
+    public static final String FIELD_LINK = "link";
     public static final String FIELD_SHOW_PASSED_GATE_EVENTS = "showPassedGateEvents";
     public static final String FIELD_PRINT_TOP_ISSUE = "printTopIssues";
     public static final String FIELD_MAX_ERROR_VOLUME = "maxErrorVolume";
@@ -41,6 +43,7 @@ public class Constants {
     public static final String DEFAULT_APP_NAME = "%system.teamcity.projectName%";
     public static final String DEFAULT_DEPLOYMENT_NAME = "%build.number%";
     public static final String DEFAULT_URL = "https://api.overops.com";
+    public static final String DEFAULT_APP_URL = "https://app.overops.com";
     public static final String DEFAULT_CHECK_NEW_ERROR = "true";
     public static final String DEFAULT_CHECK_RESURFACED_ERRORS = "true";
     public static final String DEFAULT_VOLUME_ERRORS = "true";
@@ -48,6 +51,7 @@ public class Constants {
     public static final String DEFAULT_CRITICAL_ERRORS = "true";
     public static final String DEFAULT_REGRESSIONS_ERROR = "true";
     public static final String DEFAULT_MARK_UNSTABLE = "false";
+    public static final String DEFAULT_LINK = "false";
     public static final String DEFAULT_PRINT_TOP_ISSUE = "5";
     public static final String DEFAULT_NEW_EVENTS = "false";
     public static final String DEFAULT_RESURFACED_ERRORS = "false";
