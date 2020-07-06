@@ -6,7 +6,6 @@
        default-autowire="constructor">
 
     <bean id="overOpsAgentBuildRunner" class="com.overops.plugins.runner.OverOpsAgentBuildRunner"/>
-    <bean id="overOpsServiceImpl" class="com.overops.plugins.service.impl.OverOpsServiceImpl"/>
     <bean id="overOpsReportPlugin" class="com.overops.plugins.OverOpsReportPlugin"/>
 
 </beans>
