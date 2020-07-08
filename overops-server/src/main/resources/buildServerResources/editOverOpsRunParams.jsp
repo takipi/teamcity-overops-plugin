@@ -21,6 +21,17 @@
   </tr>
   <tr>
     <th class="noBorder">
+      <label for="url">APP URL:</label>
+    </th>
+    <td>
+      <props:textProperty id="appUrl" name="appUrl" className="longField" />
+      <span class="smallNote">
+    The complete URL of the OverOps APP including protocal and port (https://app.overops.com or http://host.domain.com:8080)
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <th class="noBorder">
       <label for="envId">Environment ID:</label>
     </th>
     <td>
@@ -100,6 +111,15 @@
                 If checked the build will be marked <strong>failure</strong> if any quality gate did not pass.
             </span>
           </td>
+    </tr>
+    <tr>
+        <th class="noBorder"><label for="link">Create a Report Link: </label></th>
+        <td>
+            <props:checkboxProperty name="link" className="checkBoxField"/>
+            <span class="smallNote">
+                If checked a link will be generated and displayed. The Quality Report can then be viewed by clicking the generated link. Note: If checked the Mark Unstable option is ignored.
+            </span>
+        </td>
     </tr>
     <tr>
         <th class="noBorder"><label for="showPassedGateEvents">Show Issues For Passed Gates: </label></th>

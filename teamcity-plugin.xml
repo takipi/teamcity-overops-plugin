@@ -3,7 +3,7 @@
   <info>
     <name>overops-plugin</name>
     <display-name>OverOps</display-name>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <description>This plugin will check a build for errors in OverOps.</description>
     <download-url>https://github.com/takipi/teamcity-overops-plugin</download-url>
     <email>support@overops.com</email>

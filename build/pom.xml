@@ -4,7 +4,7 @@
   <parent>
     <artifactId>teamcity</artifactId>
     <groupId>com.overops.plugins</groupId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
   </parent>
   <artifactId>build</artifactId>
   <packaging>pom</packaging>
@@ -18,17 +18,17 @@
       <dependency>
            <groupId>com.overops.plugins</groupId>
            <artifactId>overops-agent</artifactId>
-           <version>1.3.0</version>
+           <version>1.4.0</version>
       </dependency>
       <dependency>
            <groupId>com.overops.plugins</groupId>
            <artifactId>overops-common</artifactId>
-           <version>1.3.0</version>
+           <version>1.4.0</version>
       </dependency>
       <dependency>
            <groupId>com.overops.plugins</groupId>
            <artifactId>overops-server</artifactId>
-           <version>1.3.0</version>
+           <version>1.4.0</version>
       </dependency>
   </dependencies>
   <build>

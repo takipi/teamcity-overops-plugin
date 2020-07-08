@@ -82,6 +82,7 @@ public class OverOpsRunType extends RunType {
         map.put(Constants.FIELD_UNIQUE_ERRORS, Constants.DEFAULT_UNIQUE_ERRORS);
         map.put(Constants.FIELD_CRITICAL_ERRORS, Constants.DEFAULT_CRITICAL_ERRORS);
         map.put(Constants.FIELD_MARK_UNSTABLE, Constants.DEFAULT_MARK_UNSTABLE);
+        map.put(Constants.FIELD_LINK, Constants.DEFAULT_LINK);
         map.put(Constants.FIELD_PRINT_TOP_ISSUE, Constants.DEFAULT_PRINT_TOP_ISSUE);
 
         map.put(Constants.FIELD_MAX_ERROR_VOLUME, Constants.DEFAULT_MAX_ERROR_VOLUME);

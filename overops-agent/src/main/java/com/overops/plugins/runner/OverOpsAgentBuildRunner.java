@@ -7,8 +7,6 @@ import jetbrains.buildServer.agent.*;
 import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
 import org.jetbrains.annotations.NotNull;
 
-
-
 public class OverOpsAgentBuildRunner implements AgentBuildRunner {
 
     @NotNull
@@ -16,8 +14,8 @@ public class OverOpsAgentBuildRunner implements AgentBuildRunner {
     @NotNull
     private final ArtifactsWatcher artifactsWatcher;
 
-    public OverOpsAgentBuildRunner(@NotNull OverOpsService overOpsService, @NotNull ArtifactsWatcher artifactsWatcher) {
-        this.overOpsService = overOpsService;
+    public OverOpsAgentBuildRunner(@NotNull ArtifactsWatcher artifactsWatcher) {
+        this.overOpsService = new OverOpsService();
         this.artifactsWatcher = artifactsWatcher;
     }
 

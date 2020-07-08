@@ -1,4 +1,4 @@
-package com.overops.plugins.service.impl;
+package com.overops.plugins.service;
 
 import jetbrains.buildServer.agent.BuildProgressLogger;
 import org.jetbrains.annotations.NotNull;
